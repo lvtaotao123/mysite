@@ -1,0 +1,340 @@
+{% extends "admin_page/master.html" %}
+{# 当前是用户管理模块 #}
+{% block leftMeun %}
+    <div class="leftMeun" id="leftMeun">
+        <div id="logoDiv">
+            <p id="logoP"><img id="logo" alt="校园兼职网" src="/static/admin/images/logo.png"><span>校园兼职网</span></p>
+        </div>
+        <div id="personInfor">
+            <p id="userName">管理员</p>
+            <p><span>442203811@qq.com</span> More
+
+            </p>
+            <p>&nbsp;&nbsp;&nbsp;
+                    <a href="{% url 'myadmin:logout' %}">退出登录</a>
+                </p>
+        </div>
+        <div class="meun-title">账号管理</div>
+        <div class="meun-item  meun-item-active"><a href="/admin/all_user"><img src="/static/admin/images/icon_chara_grey.png">用户管理</a></div>
+        <div class="meun-item" ><a href="/admin/user_shenhe"><img src="/static/admin/images/icon_source.png">用户申请</a></div>
+
+        <div class="meun-title">文章管理</div>
+        <div class="meun-item"><a href="/admin/all_article"><img src="/static/admin/images/icon_house_grey.png">全部文章</a></div>
+        <div class="meun-item"><a href="/admin/article_shenhe"><img src="/static/admin/images/icon_change_grey.png">文章审核</a></div>
+        <div class="meun-item"><a href="/admin/tags"><img src="/static/admin/images/icon_card_grey.png">文章标签管理</a></div>
+        <div class="meun-item"><a href="/admin/weigui"><img src="/static/admin/images/icon_char_grey.png">违规管理</a></div>
+
+        <div class="meun-title">ADMIN</div>
+        <div class="meun-item"><a href="/admin/notice"><img src="/static/admin/images/icon_user.png">公告栏</a></div>
+        <div class="meun-item"><a href="/admin/manager"><img src="/static/admin/images/icon_rule_grey.png">修改密码</a></div>
+    </div>
+{% endblock %}
+
+{% block tab-content %}
+<div  id="user">
+        <div class="check-div form-inline">
+            <div class="col-xs-3">
+                <button class="btn btn-yellow btn-xs" data-toggle="modal" data-target="#addUser">添加用户 </button>
+                {{ callback }}
+
+            </div>
+
+            <div class="col-xs-4">
+                <form action="/admin/user_input/" method="post">
+                    {% csrf_token %}
+                    <input type="text" class="form-control input-sm" name="input_value" placeholder="输入用户名或者电话搜索">
+                    <button class="btn btn-white btn-xs ">查 询 </button>
+                </form>
+            </div>
+
+        </div>
+        <div class="data-div">
+            <div class="row tableHeader">
+                <div class="col-xs-2 ">
+                    用户名
+                </div>
+                <div class="col-xs-2">
+                    电话
+                </div>
+                <div class="col-xs-2">
+                    用户类型
+                </div>
+                <div class="col-xs-2">
+                    头像
+                </div>
+                <div class="col-xs-2">
+                    性别
+                </div>
+                <div class="col-xs-2">
+                    操作
+                </div>
+            </div>
+
+            <div class="tablebody">
+                {% for user in users %}
+                    <div class="row">
+                        <div class="col-xs-2 ">
+                            {{ user.username }}
+                        </div>
+                        <div class="col-xs-2">
+                            {{ user.tel }}
+                        </div>
+                        <div class="col-xs-2">
+                            {% if user.usertype == 0%}
+                                学生
+                            {% else %}
+                                商铺
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-2">
+                            <img src="{{ user.imagepath }}" width="40px" height="40px">
+                        </div>
+                        <div class="col-xs-2">
+                            {% if user.sex == 0 %}
+                                保密
+                            {% elif user.sex == 1 %}
+                                女
+                            {% else %}
+                                男
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-2">
+                            <button class="btn btn-success btn-xs more_data"  uid="{{ user.id }}" data-toggle="modal" data-target="#reviseUser">更多信息</button>
+                            <button class="btn btn-danger btn-xs del_u" data-toggle="modal" data-target="#deleteUser" uid="{{ user.id }}">删除</button>
+                            <button class="btn btn-success btn-xs add_xinyong"  uid="{{ user.id }}" data-toggle="modal" data-target="#addXinyong">信用充值</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+        <!--页码块-->
+
+
+                {{ pagestr }}
+
+
+
+        <!--弹出添加用户窗口-->
+        <div class="modal fade" id="addUser" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form-horizontal" action="/admin/add_user/" method="post">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">添加用户</h4><span>需用户自行认证</span>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="container-fluid">
+
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="sName" class="col-xs-3 control-label">用户名：</label>
+                                    <div class="col-xs-8 ">
+                                        <input type="text" class="form-control input-sm duiqi" name="sName" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sLink" class="col-xs-3 control-label">密码：</label>
+                                    <div class="col-xs-8 ">
+                                        <input type="password" class="form-control input-sm duiqi" name="pwd" id="sLink" placeholder="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">电话：</label>
+                                    <div class="col-xs-8">
+                                        <input type="tel" class="form-control input-sm duiqi" name="tel" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">用户类别：</label>
+                                    <div class="col-xs-8">
+                                        <select class=" form-control select-duiqi" name="leibie">
+                                            <option value="0" >学生</option>
+                                            <option value="1">商铺</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">性别：</label>
+                                    <div class="col-xs-8">
+                                        <select class=" form-control select-duiqi" name="sex">
+                                            <option value="2">男</option>
+                                            <option value="1">女</option>
+                                            <option value="0">保密</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                        <input type="submit" class="btn btn-xs btn-green" id="baocun" value="保存">
+                    </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+        <!--弹出充值信用窗口-->
+        <div class="modal fade" id="addXinyong" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <form class="form-horizontal" action="/admin/add_xinyong/" method="post">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">信用充值</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                                {% csrf_token %}
+                                <div class="form-group ">
+                                    <label for="sName" class="col-xs-3 control-label">用户名：</label>
+                                    <div class="col-xs-8 x_username">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sLink" class="col-xs-3 control-label">当前信用值：</label>
+                                    <div class="col-xs-8 x_xinyong">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sOrd" class="col-xs-3 control-label">充值：</label>
+                                    <div class="col-xs-8 ">
+                                        <input type="text" class="form-control input-sm duiqi x_input" name="x_i" id="sKnot" placeholder="">
+                                        <input type="hidden" class="x_uid" name="x_uid" >
+                                        <input type="hidden" class="old_xinyong" name="old_xinyong" >
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                        <button type="submit" class="btn btn-xs btn-green">保 存</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            </form>
+            <!-- /.modal-dialog -->
+        </div>
+        <!--弹出查看用户窗口-->
+        <div class="modal fade" id="reviseUser" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">详细信息</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <form class="form-horizontal">
+                                <div class="form-group ">
+                                    <label for="sName" class="col-xs-3 control-label">用户名：</label>
+                                    <div class="col-xs-8 a_username">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sLink" class="col-xs-3 control-label">电话：</label>
+                                    <div class="col-xs-8 a_tel">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sOrd" class="col-xs-3 control-label">用户类型：</label>
+                                    <div class="col-xs-8 a_usertype">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">头像：</label>
+                                    <div class="col-xs-8">
+                                        <img src="" width="20px" height="20px" class="a_img">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">性别：</label>
+                                    <div class="col-xs-8 a_sex">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">信用：</label>
+                                    <div class="col-xs-8 a_xinyong">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="situation" class="col-xs-3 control-label">违规次数：</label>
+                                    <div class="col-xs-8 a_money">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">注册时间：</label>
+                                    <div class="col-xs-8 a_register">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">登录时间：</label>
+                                    <div class="col-xs-8 a_last">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">身份核实：</label>
+                                    <div class="col-xs-8 a_heshi">
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <!--弹出删除用户警告窗口-->
+        <div class="modal fade" id="deleteUser" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">提示</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            确定要删除该用户？删除后不可恢复！
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                        <button type="button" class="btn  btn-xs btn-danger deleteUser" >保 存</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+    </div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

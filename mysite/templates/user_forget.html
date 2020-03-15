@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <title>找回</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+{#    <link rel="alternate icon" type="image/png" href="images/favicon.png">#}
+{#    <link rel='icon' href='favicon.ico' type='image/x-ico' />#}
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="/static/lib/css/default.min.css?t=227" />
+    <link rel="stylesheet" href="/static/lib/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/lib/css/iconfont.css" />
+    <style>
+
+    </style>
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+
+
+</head>
+<body>
+    ﻿<header class="hd1">
+    <div class="cg">
+        <div class="hd1-left">
+            <a href="/index/"><img class="am-hide-md-down" src="/static/pic/699aed80fbe5d521631fbadf66dc1ccc_12799.png" /></a>
+        </div>
+        <div class="hd1-right">
+            <a href="/user_login/">登录</a>
+            <a href="/user_register/">注册</a>
+        </div>
+    </div>
+</header>
+
+
+     <div class="user">
+         <div class="cgs">
+             <div class="am-u-sm-12 am-u-md-12 am-u-lg-7">
+                 <div class="user-div">
+                     <form action="{% url 'user_forget' %}" method="post">
+                         <h1>找回密码</h1>
+                         <ul>
+                             {% csrf_token %}
+                            <li><i>&#xe681;</i><input type="text" id="email" name="email" value="" placeholder="请输入邮箱" style="width: 70%;">
+                                <input type="bottom" class="btn btn-primary btn-sm btn-outline-primary " value="获取验证码" id="get_token" style="height:23px;width:76px;margin:auto;padding: 2px 7px;font-size:12px;cursor:pointer;">
+                            </li>
+
+                             <li><i>&#xe680;</i><input type="text"  id="token" name="token" value="" placeholder="请输入验证码" style="width: 70%;"/></li>
+                             <li><i>&#xe680;</i><input type="password" name="new_pwd" value="" placeholder="请输入新密码" style="width: 70%;"/></li>
+                         </ul>
+
+                         <button type="submit" style="width: 100%;padding: .8rem 0;border-radius: 5px;display: block;background: #0076ca;color: #fff;border: 0;float: left; margin-top: 2rem;">提交</button>
+                     </form>
+                 </div>
+             </div>
+             <div class="am-hide-sm am-hide-md am-u-lg-5">
+                 <div class="user-right">
+                     <a href="#">不需找回</a>
+                     <button id="d_lo">立即登录</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+<script src="/static/lib/jquery-3.4.1.js"></script>
+<script src="/static/lib/bootstrap.min.js"></script>
+<script>
+    $(function () {
+
+        $("#d_lo").click(function () {
+            window.open('/user_login/', '_self');
+        });
+
+        $("#get_token").click(function () {
+            var count = 60;
+            $("#get_token").val(count+"秒后").attr("disabled","disabled");
+            var v = $("#email").val().trim();
+            if (v.length){
+                $.getJSON("/user_send_mail/",{"email": v}, function (data) {
+                    console.log(data);
+                })
+            }
+            var resend = setInterval(function () {
+                count--;
+                console.log(count);
+                if (count> 0) {$("#get_token").val(count+"秒后")}
+                else{clearInterval(resend);$("#get_token").val("获取验证码").removeAttr('disabled');}
+
+            }, 1000);
+
+        });
+    })
+</script>
+</body>
+</html>

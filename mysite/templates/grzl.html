@@ -1,0 +1,348 @@
+{% extends "base.html" %}
+
+{% block leader %}
+
+    <ul>
+        <li class="on"><a href="/index/">首页</a></li>
+        <li ><a href="/zjz/">信息中心</a></li>
+        <li ><a href="/wyfb/">我要发布</a></li>
+        <li><a href="/lxwm/">联系我们</a></li>
+    </ul>
+
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="/static/lib/css/zjz.css" >
+    <style>
+        .cgss{
+            width: 920px;
+            margin: 0 auto;
+            padding: 0 70px;
+        }
+        .m-title{
+            font-size: 20px;
+            color: #2b669a;
+            font-weight: 700;
+        }
+        .f-12{
+            font-size: 14px;
+            color: #777;
+        }
+        .tip-content{
+            margin: 0 auto;
+            margin-top: 15px;
+            border:1px solid rgba(255,148,0,.3);
+            background-color: rgba(255,148,0,.1);
+            border-radius: 4px;
+            width: 700px;
+            text-align: center;
+            font-family: Inconsolata;
+            font-style: normal;
+            font-weight: 400;
+            font-variant: normal;
+            text-transform: none;
+            text-rendering: auto;
+            line-height: 1;
+            font-size: 13px;
+            padding-bottom: 8px;
+            padding-top: 8px;
+            color: #606060;
+        }
+        .form-content1{
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .form-content{
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+    .w680{
+        width: 680px;
+        margin: 0 auto;
+    }
+    .title-num{
+        display: block;
+        width: 20px;
+        height: 20px;
+        background-color: #4e94ff;
+        border-radius: 50%;
+        color: white;
+        text-align: center;
+        margin-right: 10px;
+    }
+    .title-num-none{
+        display: block;
+        width: 20px;
+        height: 20px;
+        color: white;
+        margin-right: 10px;
+    }
+    .float-right{
+        float: right;
+    }
+    .float-left{
+        float: left;
+    }
+    .tip-span{
+        color: red;
+        display: block;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        float: left;
+    }
+    .chakan {
+        display: block;
+        width: 100px;
+        text-align: center;
+        float: right;
+        color: #4e94ff;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .form-content input {
+        height: 36px;
+        line-height: 36px;
+        border-radius: 4px;
+        color: #666;
+        border: 1px silver solid;
+        padding: 0 7px;
+    }
+    .form-content select {
+        width: 100%;
+        height: 36px;
+        line-height: 36px;
+        border-radius: 4px;
+        color: #666;
+        border: 1px silver solid;
+        padding: 0 7px;
+        text-align: center;
+    }
+    .form-content textarea{
+        width: 100%;
+        height: 98px;
+        line-height: 36px;
+        border-radius: 4px;
+        color: #666;
+        border: 1px silver solid;
+        padding: 0 7px;
+    }
+    .form-button{
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+    .cgss .btn-info{
+        width: 140px;
+        border-radius: 36px;
+    }
+    .cgss .btn-info:hover{
+        width: 140px;
+        border-radius: 36px;
+
+    }
+    .content p{
+        width: 100%;
+        padding: 4px;
+        float: left;
+        color: #9d9d9d;
+    }
+    .content p span{
+        font-size: 16px;
+        color: black;
+    }
+    .pd{
+        cursor: pointer;
+    }
+    .input-span{
+        height: 36px;
+        line-height: 36px;
+        border-radius: 4px;
+        color: #666;
+        border: 1px silver solid;
+        padding: 0 7px;
+        width: 338px;
+    }
+    #sex_select{
+        height: 36px;
+        line-height: 36px;
+        border-radius: 4px;
+        color: #666;
+        border: 1px silver solid;
+        padding: 0 7px;
+        width: 338px;
+    }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="cgss pozi" style="color: #707070; font-size: 12px;line-height: 30px;margin-top: 10px;">当前位置：<a href="/index/">首页</a> > 个人资料</div>
+    <div class="cgss container" style="margin-top: 14px;">
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-lg-2">
+                <div style="width: 106px;height: 106px;float: left;">
+                    <img class="pd" src="{{ request.u.imagepath }}" style="width: 106px;height: 106px;float: left;border-radius: 50%;border: #e3e3e3 1px solid;" data-toggle="modal" data-target="#img_button">
+                </div>
+            </div>
+            <div class="col-lg-10 float-left">
+                <div class="m-title">{{ request.u.username }}<span class="pd"  data-toggle="modal" data-target="#update_username" style="color: #1c94c4;font-size: 14px;display: inline-block;width: 20px;height: 20px;margin-left: 8px;">🖊</span></div>
+                <div class="f-12" style="margin-top: 15px;">性别：{% if request.u.sex == 1  %}男{% elif request.u.sex == 2  %}女{% elif request.u.sex == 3 %}保密 {% endif %} <span class="pd"  data-toggle="modal" data-target="#update_sex" style="color: #1c94c4;font-size: 14px;display: inline-block;width: 20px;height: 20px;margin-left: 8px;">🖊</span></div>
+                <div class="f-12"  style="margin-top: 15px;">用户类型：{% if request.u.id == 21  %}管理员{% elif request.u.usertype  %}商铺{% elif request.u.usertype %}学生 {% endif %} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: darksalmon;">信用余额：{{ request.u.xinyong }}</span>&nbsp;&nbsp;&nbsp;&nbsp;<button  data-toggle="modal" data-target="#chongzhi" class="btn btn-info btn-sm">充值</button></div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 30px;margin-bottom: 20px;">
+            <div class="col-lg-12">
+                <div class="float-left" style="font-size: 16px;font-weight: normal;">&nbsp;&nbsp;账号信息</div>
+                <p class="float-right" style=" width: 89%; height: 1px;background-color: #E9E9E9;margin-top: 10px;"></p>
+            </div>
+        </div>
+        <div class="row content">
+            <div class="col-lg-12">
+                <p>&nbsp;&nbsp;绑定电话： <span>{{request.u.tel}}</span></p>
+                <p>&nbsp;&nbsp;绑定邮箱： <span>{{ request.u.email }}</span></p>
+            </div>
+        </div>
+        <div class="row content">
+            <div class="col-lg-12">
+                <p>&nbsp;&nbsp;违规次数： <span>{{request.u.money}}</span></p>
+                <p>&nbsp;&nbsp;最后登录： <span>{{ request.u.lastlogin_date|date:"Y-m-d H:i:s" }}</span></p>
+            </div>
+        </div>
+        <div class="row content">
+            <div class="col-lg-12">
+                <p>&nbsp;&nbsp;受否核实： <span>{% if request.u.is_heshi %}核实</span></p>{% else %}未核实</span></p>{% if request.u.idcardpath or request.u.idcardpath1  %}<p>&nbsp;&nbsp;当前状态： <span style="color: darksalmon;">正在审核</span></p>{% else %}&nbsp;&nbsp;&nbsp;&nbsp;<a>点击认证</a>{% endif %}{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div style="height: 500px;"></div>
+    <div class="modal fade" id="update_username" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">修改昵称：</h4>
+                    </div>
+                    <form action="{% url 'grzl' %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                    <input type="hidden" name="aid" class="aaid">
+                                    <span style="font-size: 10px;text-align: center;color: red;">*每次修改扣除20信用值</span>
+                                    <div class="form-group ">
+                                            <input type="text" name="username" required minlength="4" maxlength="8" class="input-span" placeholder="4-8个字符">
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                            <button type="submit" class="btn btn-primary  btn-xs queding" id="text_content_button">修 改</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    <div class="modal fade" id="chongzhi" role="dialog" aria-labelledby="gridSystemModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="gridSystemModalLabel">充值：</h4>
+                </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                                <input type="hidden" name="aid" class="aaid">
+                                <div class="form-group ">
+                                    <div class="col-xs-8 c_title">
+                                        请联系管理员17352623323
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal fade" id="update_sex" role="dialog" aria-labelledby="gridSystemModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="gridSystemModalLabel">性别：</h4>
+                </div>
+                <form method="post" action="{% url 'grzl' %}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                                <input type="hidden" name="aid" class="aaid">
+                                <div class="form-group ">
+                                    <select name="sex_select" id="sex_select">
+                                        <option value="1" {% if request.u.sex == 1 %}selected{% endif %}>男</option>
+                                        <option value="2" {% if request.u.sex == 2 %}selected{% endif %}>女</option>
+                                        <option value="3" {% if request.u.sex == 3 %}selected{% endif %}>保密</option>
+                                    </select>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                        <button type="submit" class="btn btn-primary  btn-xs " id="text_content_button">确 定</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div class="modal fade" id="img_button" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding: 8px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">图片</h4>
+                    </div>
+                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_img_t'  %}">
+                        {% csrf_token %}
+                        <div class="modal-body" style="line-height: 30px;">
+                            <div class="container-fluid" style="padding-left: 0px;padding-right: 0px;">
+                                    <input type="hidden" name="aid" class="aaid">
+                                    <div class="form-group " >
+                                        <label for="sName" class="col-xs-3 control-label" style="padding-left: 0px;padding-right: 0px;">上传图片：</label>
+                                        <div class="col-xs-6  c_title"  style="padding-left: 0px;padding-right: 0px;">
+                                            <input type="text" name="localUrl" class="ke-input-text-t" tabindex="-1" readonly="true">
+                                        </div>
+                                        <div class="col-xs-3  c_title" style="padding-left: 0px;padding-right: 0px;">
+                                            <input type="file" style="position: absolute; top: 0; bottom: 0; left: 0;right: 0; opacity: 0;" type="file" id="pic_t" name="pic_t" accept="image/jpeg, image/jpg, image/png, image/bmp" >
+                                            <button type="button" class="btn btn-info">浏览</button>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                            <button type="submit" class="btn btn-info  btn-xs ">上 传</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(function () {
+            $("#pic_t").change( function() {
+                    var path = $('#pic_t').val();
+                    $(".ke-input-text-t").val(path);
+            });
+        })
+    </script>
+{% endblock %}
+

@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block leader %}
+
+    <ul>
+        <li class="on"><a href="/index/">首页</a></li>
+        <li ><a href="/zjz/">信息中心</a></li>
+        <li><a href="/wyfb/">我要发布</a></li>
+        <li><a href="/lxwm/">联系我们</a></li>
+    </ul>
+
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="/static/lib/css/zjz.css" >
+    <style>
+        .cgss{
+            width: 1100px;
+            margin: 0 auto;
+        }
+
+        .pic_up{
+            font-size: 16px;line-height: 28px;color: #707070;padding: 30px;
+            position: relative;
+            cursor: pointer;
+        }
+        input:hover{
+            cursor: pointer;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="cgss pozi" style="color: #707070; font-size: 12px;line-height: 30px;margin-top: 10px;">当前位置：<a href="/index/">首页</a> > 身份认证<hr></div>
+    <div class="cgss" style="margin-top: 14px;padding-left: 20px;">
+        <div class="m-title">
+            <h3>身份证正面：</h3>
+            <div style="width: 35px;height: 3px;background-color: #e6e6e6;"></div>
+        </div>
+        <div class="pic_up" >
+            {% if request.u.idcardpath  %}
+                <span style="color: red;">已上传请等待审核</span>
+            {% else %}
+            点击上传： <img src="/static/pic/upload.jpg" width="60px;" data-toggle="modal" data-target="#img_zheng">
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="cgss" style="margin-top: 14px;padding-left: 20px;">
+        <div class="m-title">
+
+            <h3>身份证反面：</h3>
+            <div style="width: 35px;height: 3px;background-color: #e6e6e6;"></div>
+        </div>
+
+        <div class="pic_up" >
+        {% if request.u.idcardpath1  %}
+            <span style="color: red;">已上传请等待审核</span>
+        {% else %}
+         点击上传： <img src="/static/pic/upload.jpg" width="60px;" data-toggle="modal" data-target="#img_fan">
+        </div>
+        {% endif %}
+
+    </div>
+
+    {% if request.u.usertype == 1 %}
+        <div class="cgss" style="margin-top: 14px;padding-left: 20px;">
+            <div class="m-title">
+
+                <h3>营业执照：</h3>
+                <div style="width: 35px;height: 3px;background-color: #e6e6e6;"></div>
+            </div>
+
+            <div class="pic_up" >
+            {% if request.u.yingyezhizhao  %}
+                <span style="color: red;">已上传请等待审核</span>
+            {% else %}
+             点击上传： <img src="/static/pic/upload.jpg" width="60px;" data-toggle="modal" data-target="#img_ying">
+            </div>
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+    <div class="cgss"><hr></div>
+    <div class="modal fade" id="img_fan" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding: 8px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">图片</h4>
+                    </div>
+                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_img_f'  %}">
+                        {% csrf_token %}
+                        <div class="modal-body" style="line-height: 30px;">
+                            <div class="container-fluid" style="padding-left: 0px;padding-right: 0px;">
+                                    <input type="hidden" name="aid" class="aaid">
+                                    <div class="form-group " >
+                                        <label for="sName" class="col-xs-3 control-label" style="padding-left: 0px;padding-right: 0px;">上传图片：</label>
+                                        <div class="col-xs-6  c_title"  style="padding-left: 0px;padding-right: 0px;">
+                                            <input type="text" name="localUrl" class="ke-input-text-f" tabindex="-1" readonly="true">
+                                        </div>
+                                        <div class="col-xs-3  c_title" style="padding-left: 0px;padding-right: 0px;">
+                                            <input type="file" style="position: absolute; top: 0; bottom: 0; left: 0;right: 0; opacity: 0;" type="file" id="pic_f" name="pic_f" accept="image/jpeg, image/jpg, image/png, image/bmp" >
+                                            <button type="button" class="btn btn-info">浏览</button>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                            <button type="submit" class="btn btn-info  btn-xs ">上 传</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    <div class="modal fade" id="img_ying" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding: 8px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">图片</h4>
+                    </div>
+                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_img_y'  %}">
+                        {% csrf_token %}
+                        <div class="modal-body" style="line-height: 30px;">
+                            <div class="container-fluid" style="padding-left: 0px;padding-right: 0px;">
+                                    <input type="hidden" name="aid" class="aaid">
+                                    <div class="form-group " >
+                                        <label for="sName" class="col-xs-3 control-label" style="padding-left: 0px;padding-right: 0px;">上传图片：</label>
+                                        <div class="col-xs-6  c_title"  style="padding-left: 0px;padding-right: 0px;">
+                                            <input type="text" name="localUrl" class="ke-input-text-y" tabindex="-1" readonly="true">
+                                        </div>
+                                        <div class="col-xs-3  c_title" style="padding-left: 0px;padding-right: 0px;">
+                                            <input type="file" style="position: absolute; top: 0; bottom: 0; left: 0;right: 0; opacity: 0;" type="file" id="pic_y" name="pic_y" accept="image/jpeg, image/jpg, image/png, image/bmp" >
+                                            <button type="button" class="btn btn-info">浏览</button>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                            <button type="submit" class="btn btn-info  btn-xs ">上 传</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+    <div class="modal fade" id="img_zheng" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding: 8px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">图片</h4>
+                    </div>
+                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_img_z'  %}">
+                        {% csrf_token %}
+                        <div class="modal-body" style="line-height: 30px;">
+                            <div class="container-fluid" style="padding-left: 0px;padding-right: 0px;">
+                                    <input type="hidden" name="aid" class="aaid">
+                                    <div class="form-group " >
+                                        <label for="sName" class="col-xs-3 control-label" style="padding-left: 0px;padding-right: 0px;">上传图片：</label>
+                                        <div class="col-xs-6  c_title"  style="padding-left: 0px;padding-right: 0px;">
+                                            <input type="text" name="localUrl" class="ke-input-text-z" tabindex="-1" readonly="true">
+                                        </div>
+                                        <div class="col-xs-3  c_title" style="padding-left: 0px;padding-right: 0px;">
+                                            <input type="file" style="position: absolute; top: 0; bottom: 0; left: 0;right: 0; opacity: 0;" type="file" id="pic_z" name="pic_z" accept="image/jpeg, image/jpg, image/png, image/bmp" >
+                                            <button type="button" class="btn btn-info">浏览</button>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                            <button type="submit" class="btn btn-info  btn-xs ">上 传</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(function () {
+            $("#pic_f").change( function() {
+                var path = $('#pic_f').val();
+                $(".ke-input-text-f").val(path);
+            });
+
+            $("#pic_z").change( function() {
+                var path = $('#pic_z').val();
+                $(".ke-input-text-z").val(path);
+            });
+
+            $("#pic_y").change( function() {
+                var path = $('#pic_y').val();
+                $(".ke-input-text-y").val(path);
+            });
+
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,254 @@
+{% extends "admin_page/master.html" %}
+{# 当前是用户管理模块 #}
+{% block css %}
+    <style>
+        .forcontent div{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .c-title{
+            max-width: 214px;
+        }
+        .c-content{
+            max-width: 537px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block leftMeun %}
+    <div class="leftMeun" id="leftMeun">
+        <div id="logoDiv">
+            <p id="logoP"><img id="logo" alt="校园兼职网" src="/static/admin/images/logo.png"><span>校园兼职网</span></p>
+        </div>
+        <div id="personInfor">
+            <p id="userName">管理员</p>
+            <p><span>442203811@qq.com</span> More
+
+            </p>
+            <p>&nbsp;&nbsp;&nbsp;
+                    <a href="{% url 'myadmin:logout' %}">退出登录</a>
+                </p>
+        </div>
+        <div class="meun-title">账号管理</div>
+        <div class="meun-item  "><a href="/admin/all_user"><img src="/static/admin/images/icon_chara_grey.png">用户管理</a></div>
+        <div class="meun-item" ><a href="/admin/user_shenhe"><img src="/static/admin/images/icon_source.png">用户申请</a></div>
+
+        <div class="meun-title">文章管理</div>
+        <div class="meun-item"><a href="/admin/all_article"><img src="/static/admin/images/icon_house_grey.png">全部文章</a></div>
+        <div class="meun-item"><a href="/admin/article_shenhe"><img src="/static/admin/images/icon_change_grey.png">文章审核</a></div>
+        <div class="meun-item"><a href="/admin/tags"><img src="/static/admin/images/icon_card_grey.png">文章标签管理</a></div>
+        <div class="meun-item"><a href="/admin/weigui"><img src="/static/admin/images/icon_char_grey.png">违规管理</a></div>
+
+        <div class="meun-title">ADMIN</div>
+        <div class="meun-item meun-item-active"><a href="/admin/notice"><img src="/static/admin/images/icon_user.png">公告栏</a></div>
+        <div class="meun-item"><a href="/admin/manager"><img src="/static/admin/images/icon_rule_grey.png">修改密码</a></div>
+
+    </div>
+{% endblock %}
+
+{% block tab-content %}
+<div  id="noc">
+        <div class="check-div form-inline">
+            <div class="col-xs-3">
+                <button class="btn btn-yellow btn-xs" data-toggle="modal" data-target="#addNotice">发布公告 </button>
+                {{ callback }}
+
+            </div>
+
+
+
+        </div>
+        <div class="data-div">
+            <div class="row tableHeader">
+                <div class="col-xs-2 ">
+                    标题
+                </div>
+                <div class="col-xs-5">
+                    内容
+                </div>
+                <div class="col-xs-2">
+                    发布时间
+                </div>
+                <div class="col-xs-3">
+                    操作
+                </div>
+            </div>
+
+            <div class="tablebody">
+                {% for user in notices %}
+                    <div class="row forcontent">
+                        <div class="col-xs-2 c-title">
+                            {{ user.title }}
+                        </div>
+                        <div class="col-xs-5 c-content">
+                            {{ user.content }}
+                        </div>
+
+
+                        <div class="col-xs-2">
+                            {{ user.datetime|date:"Y/m/d H:i:s" }}
+                        </div>
+                        <div class="col-xs-2">
+                            <button class="btn btn-success btn-xs more_data"  nid="{{ user.id }}" data-toggle="modal" data-target="#reviseNotice">查看</button>
+                            <button class="btn btn-danger btn-xs del_n" data-toggle="modal" data-target="#deleteNotice" nid="{{ user.id }}">删除</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+        <!--弹出添加用户窗口-->
+        <div class="modal fade" id="addNotice" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">发布公告</h4>
+                            </div>
+                            <form action="/admin/add_notice/" method="post">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                            <div class="form-group row">
+                                                <label for="sName" class="col-xs-3 control-label">标题：</label>
+                                                <div class="col-xs-8 ">
+                                                    <input type="text" name="title" class="form-control input-sm duiqi"  placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="sName" class="col-xs-3 control-label">正文：</label>
+                                                <div class="col-xs-8 ">
+                                                    <textarea name="content" class="form-control input-sm duiqi"></textarea>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                                    <button type="submit" class="btn btn-xs btn-green" >发 布</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+        <!-- /.modal -->
+        <!--弹出充值信用窗口-->
+
+        <!--弹出查看用户窗口-->
+        <div class="modal fade" id="reviseNotice" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width: 600px;padding: 20px;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">详细信息</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form class="form-horizontal">
+                                <div class="form-group ">
+
+                                    <div class="col-xs-12 n_title" style="width: 500px;">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <div class="col-xs-12 n_content" style="width: 500px;">
+
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <!--弹出删除用户警告窗口-->
+        <div class="modal fade" id="deleteNotice" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">提示</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            确定要删除该用户？删除后不可恢复！
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                        <button type="button" class="btn  btn-xs btn-danger deleteNotice" >保 存</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function(){
+
+        $(".more_data").click(function () {
+
+                $.ajax({
+                    url: '/admin/ajax_notice/',
+                    data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'nid':$(this).attr("nid") },
+                    type: 'POST',
+                    traditional: true,
+                    dataType:'JSON',
+                    success: function(obj){
+                        if (obj["status"] == 302){
+                            window.open("/admin/login", target="_self");
+                        }else{
+                            $('.n_title').text(obj["title"]);
+                            $('.n_content').text(obj["content"]);
+                        }
+                    },
+                })
+            });
+        $(".del_n").click(function () {
+            var nid = $(this).attr("nid");
+            $(".deleteNotice").attr("nid",nid);
+        })
+
+        $(".deleteNotice").click(function () {
+            var nid = $(this).attr("nid");
+            $('#deleteNotice').removeClass("in");
+            $('#deleteNotice').attr("aria-hidden", "true");
+            $('#deleteNotice').css({'display':'none','padding-right':''})
+            $(".modal-backdrop").remove();
+            $.ajax({
+                    url: '/admin/del_notice/',
+                    data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'nid':nid },
+                    type: 'POST',
+                    traditional: true,
+                    dataType:'JSON',
+                    success: function(obj){
+                        if (obj["status"] == 302){
+                            window.open("/admin/login", target="_self");
+                        }else{
+                        location.reload();
+                        }
+
+                    },
+                })
+        });
+            })
+    </script>
+{% endblock %}

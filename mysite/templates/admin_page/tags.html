@@ -1,0 +1,315 @@
+{% extends "admin_page/master.html" %}
+{% load my_tag %}
+{% block leftMeun %}
+    <div class="leftMeun" id="leftMeun">
+        <div id="logoDiv">
+            <p id="logoP"><img id="logo" alt="校园兼职网" src="/static/admin/images/logo.png"><span>校园兼职网</span></p>
+        </div>
+        <div id="personInfor">
+            <p id="userName">管理员</p>
+            <p><span>442203811@qq.com</span> More
+
+            </p>
+            <p>&nbsp;&nbsp;&nbsp;
+                    <a href="{% url 'myadmin:logout' %}">退出登录</a>
+                </p>
+        </div>
+        <div class="meun-title">账号管理</div>
+        <div class="meun-item  "><a href="/admin/all_user"><img src="/static/admin/images/icon_chara_grey.png">用户管理</a></div>
+        <div class="meun-item" ><a href="/admin/user_shenhe"><img src="/static/admin/images/icon_source.png">用户申请</a></div>
+
+        <div class="meun-title">文章管理</div>
+        <div class="meun-item"><a href="/admin/all_article"><img src="/static/admin/images/icon_house_grey.png">全部文章</a></div>
+        <div class="meun-item "><a href="/admin/article_shenhe"><img src="/static/admin/images/icon_change_grey.png">文章审核</a></div>
+        <div class="meun-item meun-item-active"><a href="/admin/tags"><img src="/static/admin/images/icon_card_grey.png">文章标签管理</a></div>
+        <div class="meun-item "><a href="/admin/weigui"><img src="/static/admin/images/icon_char_grey.png">违规管理</a></div>
+
+        <div class="meun-title">ADMIN</div>
+        <div class="meun-item"><a href="/admin/notice"><img src="/static/admin/images/icon_user.png">公告栏</a></div>
+        <div class="meun-item "><a href="/admin/manager"><img src="/static/admin/images/icon_rule_grey.png">修改密码</a></div>
+    </div>
+{% endblock %}
+
+{% block tab-content %}
+<div id="article_sh">
+                <div class="check-div form-inline" >
+                    <div class="col-xs-3">
+                        <button class="btn btn-yellow btn-xs" data-toggle="modal" data-target="#addWages">添加工资范围 </button>
+                        <button class="btn btn-yellow btn-xs" data-toggle="modal" data-target="#addWorktp">添加工作类型 </button>
+                    </div>
+                </div>
+                <div class="data-div">
+                    <div class="row tableHeader">
+                        <div class="col-xs-2 " style="padding-left: 20px;">
+                            标签类型
+                        </div>
+                        <div class="col-xs-3" style="padding-left: 20px;">
+                            标签名
+                        </div>
+                        <div class="col-xs-2" style="padding-left: 2px;">
+                            求职数
+                        </div>
+                        <div class="col-xs-2">
+                            招人数
+                        </div>
+                        <div class="col-xs-3">
+                            操作
+                        </div>
+                    </div>
+                    <div class="tablebody">
+                        <div class="sitTable">
+                            <table class="table  table-responsive">
+                                <tbody>
+                                    {% for wage in wages %}
+                                        <tr>
+                                            {% if forloop.first %}
+                                                <td valign="middle" class="col-xs-2" rowspan="{{ wages.count }}">工资范围</td>
+                                            {% endif %}
+                                            <td class="col-xs-3">{{ wage.name }}</td>
+                                            <td class="col-xs-2">{{ wage.subject_set.all|c_count:2 }}</td>
+                                            <td class="col-xs-2" style="padding-left: 40px!important;">{{ wage.subject_set.all|c_count:1 }}</td>
+                                            <td class="col-xs-3" style="padding-left: 50px!important;">
+                                                <button class="btn btn-success btn-xs for_tag_wages"  data-toggle="modal" wid="{{ wage.id }}" data-target="#updateWages">修改</button>
+                                                <button class="btn btn-danger btn-xs del_wage" wid="{{ wage.id }}" >删除</button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="sitTable">
+                            <table class="table  table-responsive">
+                                <tbody>
+                                {% for worktp in worktps %}
+                                    <tr>
+                                        {% if forloop.first %}
+                                            <td valign="middle" class="col-xs-2" rowspan="{{ worktps.count }}">工作类型</td>
+                                        {% endif %}
+                                        <td class="col-xs-3">{{ worktp.name }}</td>
+                                        <td class="col-xs-2">{{ worktp.subject_set.all|c_count:2 }}</td>
+                                        <td class="col-xs-2" style="padding-left: 40px!important;">{{ worktp.subject_set.all|c_count:1 }}</td>
+                                        <td class="col-xs-3" style="padding-left: 50px!important;">
+                                            <button class="btn btn-success btn-xs for_tag_worktp" cid="{{ worktp.id }}" data-toggle="modal" data-target="#updateWorktp">修改</button>
+                                            <button class="btn btn-danger btn-xs del_worktp" cid="{{ worktp.id }}">删除</button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <!--页码块-->
+
+
+                <!--弹出添加工资范围窗口-->
+                <div class="modal fade" id="addWages" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">添加工作范围</h4>
+                            </div>
+                            <form action="/admin/add_wages/" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="tag" value="1">
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                            <div class="form-group ">
+                                                <label for="sName" class="col-xs-3 control-label">工资范围：</label>
+                                                <div class="col-xs-8 ">
+                                                    <input type="text" name="wages" class="form-control input-sm duiqi"  placeholder="例如：2000-5000">
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                                    <button type="submit" class="btn btn-xs btn-green" >添 加</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+                <!--弹出添加工作类型窗口-->
+                <div class="modal fade" id="addWorktp" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">添加工作类型</h4>
+                            </div>
+                            <form action="/admin/add_worktp/" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="tag" value="1">
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                            <div class="form-group ">
+                                                <label for="sName" class="col-xs-3 control-label">工作类型：</label>
+                                                <div class="col-xs-8 ">
+                                                    <input type="text" name="worktp" class="form-control input-sm duiqi"  placeholder="">
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                                    <button type="submit" class="btn btn-xs btn-green">添 加</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+                <!--弹出修改工作类型窗口-->
+                <div class="modal fade" id="updateWorktp" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">修改工作类型</h4>
+                            </div>
+                            <form action="/admin/update_worktp/" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="tag_worktp_input" id="tag_worktp_input">
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                            <div class="form-group ">
+                                                <label for="sName" class="col-xs-3 control-label">工作类型：</label>
+                                                <div class="col-xs-8 ">
+                                                    <input type="text" name="worktp" id="worktp_tag_input" class="form-control input-sm duiqi"  >
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                                    <button type="submit" class="btn btn-xs btn-green">修 改</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+                <!--弹出修改工资范围窗口-->
+                <div class="modal fade" id="updateWages" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">修改工资范围</h4>
+                            </div>
+                            <form action="/admin/update_wages/" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="tag_wages_input" id="tag_wages_input">
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                            <div class="form-group ">
+                                                <label for="sName" class="col-xs-3 control-label">工资范围：</label>
+                                                <div class="col-xs-8 ">
+                                                    <input type="text" name="wages" id="wages_tag_input" class="form-control input-sm duiqi" >
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                                    <button type="submit" class="btn btn-xs btn-green" >修 改</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+            </div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+    $(function () {
+        $('.for_tag_wages').click(function () {
+            $.ajax({
+                url: '/admin/update_wages1/',
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'wid':$(this).attr("wid")},
+                type: 'POST',
+                traditional: true,
+                dataType:'JSON',
+                success: function(obj){
+                    if (obj["status"] == 302){
+                        window.open("/admin/login/", target="_self");
+                    }else {
+                        $('#wages_tag_input').val(obj["name"]);
+                        $('#tag_wages_input').val(obj["id"]);
+                    }
+                },
+            })
+        });
+        $('.for_tag_worktp').click(function () {
+            $.ajax({
+                url: '/admin/update_worktp1/',
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'cid':$(this).attr("cid")},
+                type: 'POST',
+                traditional: true,
+                dataType:'JSON',
+                success: function(obj){
+                    if (obj["status"] == 302){
+                        window.open("/admin/login/", target="_self");
+                    }else {
+                        $('#worktp_tag_input').val(obj["name"]);
+                        $('#tag_worktp_input').val(obj["id"]);
+                    }
+                },
+            })
+        });
+        $('.del_wage').click(function () {
+            $.ajax({
+                url: '/admin/del_wages/',
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'wid':$(this).attr("wid")},
+                type: 'POST',
+                traditional: true,
+                dataType:'JSON',
+                success: function(obj){
+                    if (obj["status"] == 302){
+                        window.open("/admin/login/", target="_self");
+                    }
+                     if(obj['data'] == '删除成功' ){
+                        window.location.reload();
+                    }else{
+                    alert(obj['data']);
+                    };
+                },
+            })
+        });
+        $('.del_worktp').click(function () {
+            $.ajax({
+                url: '/admin/del_worktp/',
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'cid':$(this).attr("cid")},
+                type: 'POST',
+                traditional: true,
+                dataType:'JSON',
+                success: function(obj){
+                    if (obj["status"] == 302){
+                        window.open("/admin/login/", target="_self");
+                    }
+                    if(obj['data'] == '删除成功' ){
+                        window.location.reload();
+                    }else{
+                    alert(obj['data']);
+                    };
+                },
+            })
+        });
+    })
+    </script>
+{% endblock %}

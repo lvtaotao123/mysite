@@ -1,0 +1,355 @@
+{% extends "base.html" %}
+
+{% block leader %}
+    <ul>
+        <li ><a href="/index/">首页</a></li>
+        <li class="on"><a href="/zjz/">信息中心</a></li>
+        <li><a href="/wyfb/">我要发布</a></li>
+        <li><a href="/lxwm/">联系我们</a></li>
+    </ul>
+{% endblock %}
+
+{% block css %}
+    <style>
+        .hide{
+            display: none;
+        }
+        .comment_tip a{
+            cursor: pointer;
+        }
+        .pozi a{
+            color: #4b4b4b;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .pozi {
+            font-size: 13px;
+        }
+
+        .jz-d-title {
+            background-color: #fff;
+            padding-left: 30px;
+            border: 1px solid #f5f5f5;
+            height: 220px;
+        }
+        .jz-d-title h2 {
+            font: 400 28px/40px 'hiragino sans gb', 'microsoft yahei';
+            color: #4b4b4b;
+            width: 550px;
+            word-break: break-all;
+            word-wrap: break-word;
+            padding: 0px;
+        }
+        .salary {
+            margin-top: 15px;
+            line-height: 24px;
+            height: 24px;
+            color: #666;
+            font-size: 14px;
+            }
+        .jz-d-bascInfo {
+            float: left;
+            width: 1100px;
+            padding-top:30px;
+        }
+        .fl{
+            float: left;
+        }
+        .salary-num {
+            font-weight: 700;
+        }
+        .salary b {
+            color: #fd8000;
+            font-size: 20px;
+            line-height: 25px;
+            vertical-align: bottom;
+        }
+        .salary-tips span {
+            float: left;
+            color: #707070;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .salary-tips {
+            float: left;
+            margin-left: 30px;
+        }
+        .btn12 {
+            display: inline-block;
+            font: 400 16px/28px 'hiragino sans gb', 'microsoft yahei';
+            text-decoration: none;
+            padding: 10px 30px;
+            background-color: #fd8000;
+            color: #fff;
+            cursor: pointer;
+        }
+        .btn12:hover{
+            text-decoration: none;
+            color: #fff;
+        }
+        .wagescap span{
+            display: inline-block;
+            padding: 2px;
+            margin-top: 20px;
+            color: #434244;
+            background-color: #fafafa;
+
+        }
+    .son-comment{
+        margin-top: 10px;
+    }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="cg pozi" style="color: #707070; font-size: 12px;line-height: 30px;margin-top: 10px;">当前位置：<a href="/index/">首页</a> > <a href="/zjz">信息中心</a> > {{ article.title }}</div>
+    <div class="cg jz-d-title">
+        <div style="width: 700px;float: left;">
+            <div id="id_for_subject" s_id="{{ article.id }}" style="display: none;"></div>
+            <h2>
+                {{ article.title }}
+            </h2>
+            <div class="salary">
+                <span class="fl salary-num">
+                    <b>{{ article.wages }}</b> 元/月
+                    </span>
+                <div class="salary-tips">
+                    <span>{{article.worktype}}</span>
+                    <span>|</span>
+                    <span>{{ article.date }}</span>
+                    <span>|</span>
+                    <span>{{ article.user.username }}{% if article.user.id == 21 %}
+                        <img src="/static/pic/guan.png" style="height: 20px;width: 20px;border: 1px solid #fd8000;border-radius: 50%">
+                    {% endif %}</span>
+                </div>
+                <a href="#" class="btn  btn-primary btn-sm active jubao_button" data-toggle="modal" data-target="#jubao_content" role="button" style="margin-left: 100px;">举报</a>
+            </div>
+            <div class="jz-d-bascInfo">
+                    {% if article.usertojob_set.all.count == 0 %}<a class="btn12 shenqing_button" pd="0" data-toggle="modal" data-target="#addtel">我要联系</a>{% endif %}
+                    {% for i in article.usertojob_set.all %} {% if i.uid == request.u %}<a class="btn12 shenqing_button" pd="1">已申请</a>{% else %}<a class="btn12 shenqing_button" pd="0" data-toggle="modal" data-target="#addtel">我要联系</a>{% endif %}  {% endfor %}
+            </div>
+        </div>
+        <div style="float: left;margin-left: 20px; height: 200px;width: 300px;">
+            <div class="user_pic" style="padding: 20px;margin: auto;text-align: center;">
+                <img src="{{ article.user.imagepath }}" style="border-radius: 50%;width:80px;height:80px;">
+                <p>{{ article.user.username }}</p>
+                <div style="">
+                    <p>性别:{% if  article.user.sex == 1 %} 男 {% elif article.user.sex == 2 %}女{% elif article.user.sex == 3 %}保密{% endif %}</p>
+                    <p>发布数量：{{ article.user.subject_set.all.count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cg" style="margin-top: 14px;padding: 20px;">
+        <div class="m-title">
+            <h3>工作内容：</h3>
+            <div style="width: 35px;height: 3px;background-color: #e6e6e6;"></div>
+        </div>
+        <div class="wagescap">
+            <div>
+               <span>{{ article.wages }}</span> <span>{{ article.worktype }}</span>
+            </div>
+        </div>
+        <div style="margin-top: 15px;font-size: 16px;line-height: 28px;color: #707070;">
+            <p>{{ article.desc }}</p>
+        </div>
+        <div style="margin-top: 15px;font-size: 16px;line-height: 28px;color: #707070;background-color: #fafafa;padding: 2px;">
+            工作地点：{{ article.place }}
+        </div>
+    </div>
+
+    <div class="cg" style="margin-top: 14px;padding: 20px;">
+        <div class="m-title">
+            <h3>评论：</h3>
+            <div style="width: 35px;height: 3px;background-color: #e6e6e6;"></div>
+        </div>
+
+        <div class="comment" style="margin-top: 15px;width: 700px;">
+            {% for conment in article.comment_set.all %}
+                {% if not conment.pid %}
+                    <div>
+                        <img src="{{ conment.userid.imagepath }}" style="border-radius: 50%;width:50px;height:50px;">{{ conment.userid.username }}:&nbsp;&nbsp;
+                        {{ conment.content }}
+                        <div style="maigin-top:2px;line-height: 16px;font-size:12px;color: #808080;">{{ conment.date }}
+                            <div class="comment_tip" style="width: 110px;float: right;">{% if conment.comment_set.all.count != 0 %}<a class="get_son_comment" pid="{{ conment.id }}" style="cursor: pointer;">展开全部</a> | {% endif %}<a class="a_huifu" style="cursor: pointer;">回复</a> </div>
+                        </div>
+                        {% if conment.comment_set.all.count != 0 %}
+                        <div class="son-comments" pid="{{ conment.id }}" style="display: none;margin-left: 100px;width: 600px;background-color: #e6e6e6;padding: 10px;">
+
+                        </div>
+                            {% endif %}
+
+                        <div class="huifu hide" >
+                           <textarea style="width: 100%;height: 60px;margin-top: 10px;">
+
+                            </textarea>
+                            <button type="button"  pid="{{ conment.id }}" class="btn btn-info huifu-click" style="display: block;margin-top: 3px;">回复</button>
+                        </div>
+                    </div>
+                    <hr>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+        <div>
+           <textarea  style="width: 700px;height: 60px;margin-top: 10px;">
+
+            </textarea>
+            <button type="button" pid="0"  class="btn btn-info huifu-click" style="display: block;margin-top: 3px;">回复</button>
+        </div>
+    </div>
+
+<div class="modal fade" id="addtel" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">您的电话：（对方通过该电话联系您）</h4>
+                    </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                    <input type="hidden" name="aid" class="aaid">
+                                    <div class="form-group ">
+                                        <label for="sName" class="col-xs-3 control-label">tel：</label>
+                                        <div class="col-xs-8 c_title">
+                                            <input type="text" id="tel_sub" placeholder="">
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                            <button type="button" class="btn btn-primary  btn-xs queding">保 存</button>
+                        </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+<div class="modal fade" id="jubao_content" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">举报：</h4>
+                    </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                    <input type="hidden" name="aid" class="aaid">
+                                    <div class="form-group ">
+                                        <label for="sName" class="col-xs-3 control-label">举报内容：</label>
+                                        <div class="col-xs-8 c_title">
+                                            <textarea id="text_content">
+
+                                            </textarea>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                            <button type="button" class="btn btn-primary  btn-xs queding" id="text_content_button">举 报</button>
+                        </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(function(){
+            $(".get_son_comment").click(function (e) {
+                pid = $(this).attr("pid");
+                var $div = $(".son-comments[pid="+pid+"]");
+                if ($div.css("display") == "none"){
+
+                    $.getJSON("/get_son_comment/", { "pid": pid}, function(json){
+                        if(json["status"] === 302){
+                            window.open("/user_login/","_self");
+                        }else if(json["status"] === 200){
+                            var $pid = json['pid'];
+                            var $div = $(".son-comments[pid="+$pid+"]");
+                            $div.css("display", "");
+                            $div.html(json["html"]);
+                            $(".get_son_comment[pid="+$pid+"]").text("收起全部");
+                        }
+                    });}else{
+                    $div.css("display","none");
+                    $(".get_son_comment[pid="+pid+"]").text("展开全部");
+                }
+            });
+
+            $(document).on('click','.a_huifu',function () {
+                $(this).parent().parent().siblings('.huifu').toggleClass("hide");
+            });
+
+            $(document).on('click','.huifu-click',function () {
+                var content = $(this).prev().val().trim();
+                var pid= $(this).attr("pid");
+                var s_id = $("#id_for_subject").attr("s_id")
+                if(content.length != 0){
+                    $.getJSON("/comment_subject/",{"pid":pid,"content":content, "s_id":s_id}, function (json) {
+                        if(json["status"] === 302){window.open("/user_login/","_self");}
+                        else if(json["status"] === 200){location.reload();}
+                    })
+                }
+            });
+
+            $(".shenqing_button").click(function () {
+                var pd = $(this).attr("pd");
+                var s_id = $("#id_for_subject").attr("s_id");
+                if(pd == "1"){
+                    $.getJSON('/shenqing_jz/', {'pd':pd,'s_id':s_id}, function (json) {
+                        if(json["status"] === 404){alert("您的账户暂未认证！");}
+                        else if(json["status"] === 302){window.open("/user_login/","_self");}
+                        else if(json["status"] === 200){location.reload();}
+                    })}
+                else{
+                    $("#tel_sub").attr({"pd":pd, "s_id":s_id});
+                }
+
+            });
+
+            $(".queding").click(function () {
+                var pd = $("#tel_sub").attr("pd");
+                var s_id = $("#tel_sub").attr("s_id");
+                var tel = $("#tel_sub").val();
+                $.getJSON('/shenqing_jz/', {'pd':pd,'s_id':s_id, 'tel':tel}, function (json) {
+                        if(json["status"] === 404){alert("您的账户暂未认证！");}
+                        else if(json["status"] === 302){window.open("/user_login/","_self");}
+                        else if(json["status"] === 201){alert("手机格式错误！");}
+                        else if(json["status"] === 200){location.reload();}
+                });
+            });
+
+            $(".jubao_button").click(function () {
+                var s_id = $("#id_for_subject").attr("s_id");
+                $("#text_content").attr("sid", s_id);
+            });
+
+            $("#text_content_button").click(function () {
+                var sid = $("#text_content").attr("sid");
+                var content = $("#text_content").val().trim();
+                if(content.length > 0) {
+                    $.getJSON('/jubao/', {"sid": sid, "content": content}, function (json) {
+                        if (json["status"] === 302) {
+                            window.open("/user_login/", "_self");
+                        } else if (json["status"] === 200) {
+                            alert("举报成功！");
+                            location.reload();
+                        }else{location.reload();}
+
+                    });
+                }
+            })
+        });
+    </script>
+{% endblock %}

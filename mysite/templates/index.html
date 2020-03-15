@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block css %}
+    <style>
+        .comcategory li a span{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 350px;
+            display: block;
+            height: 20px;
+            line-height: 20px;
+        }
+    </style>
+{% endblock %}
+{% block leader %}
+    <ul>
+        <li class="on"><a href="/index/">首页</a></li>
+        <li ><a href="/zjz/">信息中心</a></li>
+        <li><a href="/wyfb/">我要发布</a></li>
+        <li><a href="/lxwm/">联系我们</a></li>
+    </ul>
+{% endblock %}
+
+{% block notice %}
+    <div class="notice">
+        <div class="cg">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-8">
+                <div class="notice-left">
+                    <div class="notice-left-img" id="noticeimg">
+                        <a href="#"><img src="/static/pic/ddeb4ef3765d7fba214871e8fb3e0b73_71878.png" /></a>
+                    </div>
+                </div>
+            </div>
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+                <div class="notice-right">
+                    <div class="notice-right-div">
+                        <h1 class="comh1">
+                            网站公告
+                            <em>
+                                <a href="#"><b>MORE</b><i>&#xe696;</i></a>
+                            </em>
+                        </h1>
+                        <ul>
+                            {% for notice in notices %}
+                            <li><a href="/notice/?nid={{ notice.id }}"><span>{{notice.title}}{{notice.title}}</span></a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block zhaopin %}
+    <div class="index-category">
+    <div class="cg">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+            <div class="index-category-left">
+                <h1 class="comh1">
+                    招聘模块1
+                    <em>
+                        <a href="/zjz?usertp=1"><b>MORE</b><i>&#xe696;</i></a>
+                    </em>
+                </h1>
+                <ul class="comcategory">
+                    {% for zhao in zhaopin1 %}
+                    <li><a href="/jz?id={{ zhao.id }}"><span>{{ zhao.title|truncatewords:"20" }}</span><i>{{ zhao.date|date:"Y-m-d H:i:s" }}</i></a></li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+            <div class="index-category-left">
+                <h1 class="comh1">
+                    招聘模块2
+                    <em>
+                        <a href="/zjz?usertp=1"><b>MORE</b><i>&#xe696;</i></a>
+                    </em>
+                </h1>
+                <ul class="comcategory">
+                    {% for zhao in zhaopin2 %}
+                    <li><a href="/jz?id={{ zhao.id }}"><span>{{ zhao.title|truncatewords:"20" }}</span><i>{{ zhao.date|date:"Y-m-d H:i:s" }}</i></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+            <div class="index-category-left">
+                <h1 class="comh1">
+                    招聘模块3
+                    <em>
+                        <a href="/zjz?usertp=1"><b>MORE</b><i>&#xe696;</i></a>
+                    </em>
+                </h1>
+                <ul class="comcategory">
+                    {% for zhao in zhaopin3 %}
+                    <li><a href="/jz?id={{ zhao.id }}"><span>{{ zhao.title|truncatewords:"20" }}</span><i>{{ zhao.date|date:"Y-m-d H:i:s" }}</i></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block guanggao1 %}
+    <div class="ads">
+       <div class="cg">
+           <img src="/static/pic/12.jpg" />
+       </div>
+    </div>
+{% endblock %}
+
+{% block guanggao2 %}
+    <div class="ads">
+        <div class="cg">
+            <img src="/static/pic/guanggao2.png" />
+        </div>
+    </div>
+{% endblock %}
+
+{% block qiuzhi %}
+    <div class="index-category">
+    <div class="cg">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+            <div class="index-category-left">
+                <h1 class="comh1">
+                    求职模块1
+                    <em>
+                        <a href="/zjz?usertp=2"><b>MORE</b><i>&#xe696;</i></a>
+                    </em>
+                </h1>
+                <ul class="comcategory">
+                    {% for qiu in qiuzhi1 %}
+                    <li><a href="/jz?id={{ qiu.id }}"><span>{{ qiu.title|truncatewords:"20" }}</span><i>{{ qiu.date|date:"Y-m-d H:i:s" }}</i></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+            <div class="index-category-left">
+                <h1 class="comh1">
+                    求职模块2
+                    <em>
+                        <a href="/zjz?usertp=1"><b>MORE</b><i>&#xe696;</i></a>
+                    </em>
+                </h1>
+                <ul class="comcategory">
+                    {% for qiu in qiuzhi2 %}
+                    <li><a href="/jz?id={{ qiu.id }}"><span>{{ qiu.title|truncatewords:"20" }}</span><i>{{ qiu.date|date:"Y-m-d H:i:s" }}</i></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+            <div class="index-category-left">
+                <h1 class="comh1">
+                    求职模块3
+                    <em>
+                        <a href="/zjz?usertp=2"><b>MORE</b><i>&#xe696;</i></a>
+                    </em>
+                </h1>
+                <ul class="comcategory">
+                    {% for qiu in qiuzhi3 %}
+                    <li><a href="/jz?id={{ qiu.id }}"><span>{{ qiu.title|truncatewords:"20" }}</span><i>{{ qiu.date|date:"Y-m-d H:i:s" }}</i></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+
+
+

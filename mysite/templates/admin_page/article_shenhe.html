@@ -1,0 +1,306 @@
+{% extends "admin_page/master.html" %}
+
+{% block leftMeun %}
+    <div class="leftMeun" id="leftMeun">
+        <div id="logoDiv">
+            <p id="logoP"><img id="logo" alt="校园兼职网" src="/static/admin/images/logo.png"><span>校园兼职网</span></p>
+        </div>
+        <div id="personInfor">
+            <p id="userName">管理员</p>
+            <p><span>442203811@qq.com</span> More
+
+            </p>
+            <p>&nbsp;&nbsp;&nbsp;
+                    <a href="{% url 'myadmin:logout' %}">退出登录</a>
+                </p>
+        </div>
+        <div class="meun-title">账号管理</div>
+        <div class="meun-item  "><a href="/admin/all_user"><img src="/static/admin/images/icon_chara_grey.png">用户管理</a></div>
+        <div class="meun-item" ><a href="/admin/user_shenhe"><img src="/static/admin/images/icon_source.png">用户申请</a></div>
+
+        <div class="meun-title">文章管理</div>
+        <div class="meun-item"><a href="/admin/all_article"><img src="/static/admin/images/icon_house_grey.png">全部文章</a></div>
+        <div class="meun-item meun-item-active"><a href="/admin/article_shenhe"><img src="/static/admin/images/icon_change_grey.png">文章审核</a></div>
+        <div class="meun-item"><a href="/admin/tags"><img src="/static/admin/images/icon_card_grey.png">文章标签管理</a></div>
+        <div class="meun-item"><a href="/admin/weigui"><img src="/static/admin/images/icon_char_grey.png">违规管理</a></div>
+
+        <div class="meun-title">ADMIN</div>
+        <div class="meun-item"><a href="/admin/notice"><img src="/static/admin/images/icon_user.png">公告栏</a></div>
+        <div class="meun-item"><a href="/admin/manager"><img src="/static/admin/images/icon_rule_grey.png">修改密码</a></div>
+    </div>
+{% endblock %}
+
+{% block tab-content %}
+<div id="article_sh">
+
+                <div class="check-div form-inline" style="">
+                    <div class="col-lg-4 col-xs-7 col-md-6 select">
+                        <button class="btn btn-yellow btn-xs" data-toggle="modal" data-target="#addWages">添加工资范围 </button>
+                        <label for="paixu">工资范围:&nbsp;</label>
+                        {{ wages_select }}
+                    </div>
+
+                    <div class="col-lg-4 col-xs-7 col-md-6 select" style="padding-right: 40px;text-align: right;">
+                        <button class="btn btn-yellow btn-xs" data-toggle="modal" data-target="#addWorktp">添加工作类型 </button>
+                        <label for="paixu">工作类型:&nbsp;</label>
+                        {{ worktp_select }}
+                    </div>
+                    <div class="col-lg-4 col-xs-7 col-md-6" style="padding-right: 40px;text-align: right;">
+                        <form action="/admin/find_shenhe/" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" class=" form-control input-sm " name="url_info" id="url_info">
+                            <input type="text" class=" form-control input-sm " name="txt" placeholder="输入文字搜索">
+                            <button class="btn btn-white btn-xs" type="submit">查 询 </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="data-div">
+                    <div class="row tableHeader">
+                        <div class="col-xs-4 ">
+                            标题
+                        </div>
+                        <div class="col-xs-2">
+                            发布人
+                        </div>
+                        <div class="col-xs-2">
+                            发布时间
+                        </div>
+                        <div class="col-xs-2">
+                            查看
+                        </div>
+                        <div class="col-xs-2">
+                            操作
+                        </div>
+                    </div>
+                    <div class="tablebody">
+                        {% for article in articles %}
+                            <div class="row">
+                                <div class="col-xs-4 ">
+                                    {{ article.title|slice:15 }}
+                                </div>
+                                <div class="col-xs-2">
+                                    {{ article.user.username }}
+                                </div>
+                                <div class="col-xs-2">
+                                    {{ article.date|date:"Y-m-d H:i:s" }}
+                                </div>
+                                <div class="col-xs-2">
+                                    <button class="btn btn-yellow btn-xs" id="shenhe_ajax" data-toggle="modal" aid="{{ article.id }}" data-target="#for_article">详情 </button>
+                                </div>
+                                <div class="col-xs-2">
+                                    <button class="btn btn-success btn-xs shenhe_sub"  aid="{{ article.id }}" pd="1">通过</button>
+                                    <button class="btn btn-danger btn-xs shenhe_sub"  aid="{{ article.id }}" pd="0">不通过</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+                <!--页码块-->
+                {{ pagestr }}
+
+                <!--弹出添加工资范围窗口-->
+                <div class="modal fade" id="addWages" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">添加工作范围</h4>
+                            </div>
+                            <form action="/admin/add_wages/" method="post">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                            <div class="form-group ">
+                                                <label for="sName" class="col-xs-3 control-label">工资范围：</label>
+                                                <div class="col-xs-8 ">
+                                                    <input type="text" name="wages" class="form-control input-sm duiqi"  placeholder="例如：2000-5000">
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                                    <button type="submit" class="btn btn-xs btn-green" >添 加</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+                <!--弹出添加工作类型窗口-->
+                <div class="modal fade" id="addWorktp" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">添加工作类型</h4>
+                            </div>
+                            <form action="/admin/add_worktp/" method="post">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                            <div class="form-group ">
+                                                <label for="sName" class="col-xs-3 control-label">工作类型：</label>
+                                                <div class="col-xs-8 ">
+                                                    <input type="text" name="worktp" class="form-control input-sm duiqi"  placeholder="">
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                                    <button type="submit" class="btn btn-xs btn-green">添 加</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+                <!--弹出查看文章窗口-->
+                <div class="modal fade" id="for_article" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document" style="width: 700px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">文章详情</h4>
+                            </div>
+
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        <div class="form-group row">
+
+                                            <label for="sName" class="col-xs-3 control-label">标题</label>
+                                            <div class="col-xs-8 article_title">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="sName" class="col-xs-3 control-label">工作地点</label>
+                                            <div class="col-xs-8 article_place">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="sName" class="col-xs-3 control-label">工作描述</label>
+                                            <div class="col-xs-8 article_desc">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="sName" class="col-xs-3 control-label">帖子类型</label>
+                                            <div class="col-xs-8 article_tp">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="sName" class="col-xs-3 control-label">工作类型：</label>
+                                            <div class="col-xs-8 article_worktp">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="sName" class="col-xs-3 control-label">工资范围</label>
+                                            <div class="col-xs-8 article_wages">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="sName" class="col-xs-3 control-label">发布时间</label>
+                                            <div class="col-xs-8 article_date">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button  class="btn btn-xs btn-danger shenhe_sub shenhe_sub_article" data-dismiss="modal"  pd="0">不通过</button>
+                                    <button  class="btn btn-xs btn-success shenhe_sub shenhe_sub_article" data-dismiss="modal" pd="1">通 过</button>
+                                </div>
+
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+            </div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function () {
+             var $body = $('.select');
+             var f = $('#footer');
+             var pathname = window.location.pathname + window.location.search;
+             $("#url_info").val(pathname);
+             f.on('change', 'select:has(option[href])',function (e) {
+                var _this = $(this),
+                    _href = _this.find('option:selected').attr('href');//获取要跳转的地址
+                    var wid = $('#select_wages').find('option:selected').val();
+                    var cid = $('#select_worktp').find('option:selected').val();
+                    location.href = _href+'&wages='+wid+'&worktp='+cid; //跳转
+             });
+                $body.on('change', function(e) {
+                    var u = '/admin/article_shenhe';
+                    var wid = $('#select_wages').find('option:selected').val();
+                    var cid = $('#select_worktp').find('option:selected').val();
+                    var  _href =  u+'/?wages='+wid+'&worktp='+cid;//获取要跳转的地址
+                    location.href = _href;
+                });
+                $('.footer .pagination a').click(function () {
+                    var wid = $('#select_wages').find('option:selected').val();
+                    var cid = $('#select_worktp').find('option:selected').val();
+                    $(this).attr("href", $(this).attr("href")+'&wages='+wid+'&worktp='+cid);
+                });
+            $(".shenhe_sub").click(function () {
+                $.ajax({
+                    url: '/admin/article_shenhe/',
+                    data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'aid':$(this).attr("aid"),'pd': $(this).attr("pd")},
+                    type: 'POST',
+                    traditional: true,
+                    dataType:'JSON',
+                    success: function(obj){
+                        if (obj["status"] == 302){
+                            window.open("/admin/login/", target="_self");
+                        }else{
+                        window.location.reload();}
+                    },
+                })
+            });
+            $("#shenhe_ajax").click(function () {
+                $.ajax({
+                    url: '/admin/shenhe_ajax/',
+                    data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'aid':$(this).attr("aid")},
+                    type: 'POST',
+                    traditional: true,
+                    dataType:'JSON',
+                    success: function(obj){
+                        if (obj["status"] == 302){
+                            window.open("/admin/login/", target="_self");
+                        }else {
+                            $(".article_title").text(obj['title']);
+                            $(".article_place").text(obj['place']);
+                            $(".article_desc").text(obj['desc']);
+                            $(".article_date").text(obj['date']);
+                            $(".article_wages").text(obj['wages']);
+                            $(".article_worktp").text(obj['worktp']);
+                            if (obj['tp'] == 1) {
+                                $(".article_tp").text("招人");
+                            } else {
+                                $(".article_tp").text("求职");
+                            }
+                            ;
+                            $(".shenhe_sub_article").attr('aid', obj['id']);
+                        }
+                    },
+                })
+            });
+        })
+    </script>
+{% endblock %}

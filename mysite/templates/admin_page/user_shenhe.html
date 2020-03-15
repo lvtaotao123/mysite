@@ -1,0 +1,264 @@
+{% extends "admin_page/master.html" %}
+{% block css %}
+<style>
+        html,body{
+            margin: 0;
+            padding: 0;
+        }
+        .id_img img{
+            width: 40px;
+            height: 40px;
+        }
+
+        .pic02{
+            display: none;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background:rgba(255, 255, 255, 0.678);
+        }
+        .pic02 img{
+            z-index: 11;
+            height: 300px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -150px;
+        }
+    </style>
+{% endblock %}
+{% block leftMeun %}
+    <div class="leftMeun" id="leftMeun">
+        <div id="logoDiv">
+            <p id="logoP"><img id="logo" alt="校园兼职网" src="/static/admin/images/logo.png"><span>校园兼职网</span></p>
+        </div>
+        <div id="personInfor">
+            <p id="userName">管理员</p>
+            <p><span>442203811@qq.com</span> More
+
+            </p>
+            <p>&nbsp;&nbsp;&nbsp;
+                    <a href="{% url 'myadmin:logout' %}">退出登录</a>
+                </p>
+        </div>
+        <div class="meun-title">账号管理</div>
+        <div class="meun-item  "><a href="/admin/all_user"><img src="/static/admin/images/icon_chara_grey.png">用户管理</a></div>
+        <div class="meun-item meun-item-active" ><a href="/admin/user_shenhe"><img src="/static/admin/images/icon_source.png">用户申请</a></div>
+
+        <div class="meun-title">文章管理</div>
+        <div class="meun-item"><a href="/admin/all_article"><img src="/static/admin/images/icon_house_grey.png">全部文章</a></div>
+        <div class="meun-item "><a href="/admin/article_shenhe"><img src="/static/admin/images/icon_change_grey.png">文章审核</a></div>
+        <div class="meun-item "><a href="/admin/tags"><img src="/static/admin/images/icon_card_grey.png">文章标签管理</a></div>
+        <div class="meun-item "><a href="/admin/weigui"><img src="/static/admin/images/icon_char_grey.png">违规管理</a></div>
+
+        <div class="meun-title">ADMIN</div>
+        <div class="meun-item"><a href="/admin/notice"><img src="/static/admin/images/icon_user.png">公告栏</a></div>
+        <div class="meun-item "><a href="/admin/manager"><img src="/static/admin/images/icon_rule_grey.png">修改密码</a></div>
+    </div>
+{% endblock %}
+
+{% block tab-content %}
+<div  id="user">
+        <div class="check-div form-inline">
+            <div class="col-xs-3">{{ callback }}</div>
+            <div class="col-xs-4">
+                <form action="/admin/shenhe_input/" method="post">
+                    {% csrf_token %}
+                    <input type="text" class="form-control input-sm" name="input_value" placeholder="输入用户名或者电话搜索">
+                    <button class="btn btn-white btn-xs ">查 询 </button>
+                </form>
+            </div>
+
+        </div>
+        <div class="data-div">
+            <div class="row tableHeader">
+                <div class="col-xs-2 ">
+                    用户名
+                </div>
+                <div class="col-xs-2">
+                    电话
+                </div>
+                <div class="col-xs-2">
+                    用户类型
+                </div>
+                <div class="col-xs-3">
+                    身份证正/反面/(营业执照)
+                </div>
+                <div class="col-xs-1">
+                    性别
+                </div>
+                <div class="col-xs-2">
+                    审核
+                </div>
+            </div>
+
+            <div class="tablebody">
+                {% for user in users %}
+                    <div class="row">
+                        <div class="col-xs-2 ">
+                            {{ user.username }}
+                        </div>
+                        <div class="col-xs-2">
+                            {{ user.tel }}
+                        </div>
+                        <div class="col-xs-2">
+                            {% if user.usertype == 0%}
+                                学生
+                            {% else %}
+                                商铺
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-3 id_img">
+                            <img src="{{ user.idcardpath }}" class="pic01">
+                            <img src="{{ user.idcardpath1 }}" class="pic01">
+                            {% if user.usertype == 1 %}
+                                <img src="{{ user.yingyezhizhao }}" class="pic01">
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-1">
+                            {% if user.sex == 0 %}
+                                保密
+                            {% elif user.sex == 1 %}
+                                女
+                            {% else %}
+                                男
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-2">
+                            <button class="btn btn-success btn-xs sub"  uid="{{ user.id }}" pd="1" >通过</button>
+                            <button class="btn btn-danger btn-xs sub"  uid="{{ user.id }}" pd="0">拒绝</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+        <!--页码块-->
+
+
+                {{ pagestr }}
+
+        <!--弹出查看用户窗口-->
+        <div class="modal fade" id="reviseUser" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">详细信息</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <form class="form-horizontal">
+                                <div class="form-group ">
+                                    <label for="sName" class="col-xs-3 control-label">用户名：</label>
+                                    <div class="col-xs-8 a_username">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sLink" class="col-xs-3 control-label">电话：</label>
+                                    <div class="col-xs-8 a_tel">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sOrd" class="col-xs-3 control-label">用户类型：</label>
+                                    <div class="col-xs-8 a_usertype">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">头像：</label>
+                                    <div class="col-xs-8">
+                                        <img src="" width="20px" height="20px" class="a_img">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">性别：</label>
+                                    <div class="col-xs-8 a_sex">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">信用：</label>
+                                    <div class="col-xs-8 a_xinyong">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="situation" class="col-xs-3 control-label">违规次数：</label>
+                                    <div class="col-xs-8 a_money">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">注册时间：</label>
+                                    <div class="col-xs-8 a_register">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">登录时间：</label>
+                                    <div class="col-xs-8 a_last">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">身份核实：</label>
+                                    <div class="col-xs-8 a_heshi">
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+    </div>
+<div class="pic02">
+    <img src="#" alt="">
+</div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function () {
+            $('.pic01').on('click',function(){
+                var picSrc =  $(this).attr('src');
+                $('.pic02 img').attr('src',picSrc);
+                $('.pic02').show();
+                var $w = $('.pic02 img').css("width");
+                var left_w = parseFloat($w.replace("px", ""))/2;
+                var $left_w = "-"+left_w+"px";
+                $('.pic02 img').css('margin-left', $left_w);
+            });
+            $('.pic02').on('click',function(){
+                $('.pic02').hide();
+            });
+
+            $(".sub").click(function () {
+                $.ajax({
+                    url: '/admin/user_shenhe/',
+                    data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'uid':$(this).attr("uid"),'pd': $(this).attr("pd")},
+                    type: 'POST',
+                    traditional: true,
+                    dataType:'JSON',
+                    success: function(obj){
+                        if (obj["status"] == 302){
+                        window.open("/admin/login/", target="_self");
+                        }else {
+                            location.reload();
+                        }
+                    },
+                })
+            });
+        })
+    </script>
+{% endblock %}

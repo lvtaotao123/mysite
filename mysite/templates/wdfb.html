@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block css %}
+    <link rel="stylesheet" href="/static/lib/css/zjz.css" >
+    <style>
+        .item-bottom {
+            width: 80px;
+        }
+    </style>
+
+{% endblock %}
+{% block leader %}
+
+    <ul>
+        <li class="on"><a href="/index/">首页</a></li>
+        <li ><a href="/zjz/">信息中心</a></li>
+        <li ><a href="/wyfb/">我要发布</a></li>
+        <li><a href="/lxwm/">联系我们</a></li>
+    </ul>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="cg pozi" style="color: #707070; font-size: 12px;line-height: 30px;margin-top: 10px;">当前位置：<a href="/index/">首页</a> > 我的发布</div>
+        {% for article in articles %}
+            <div class="cg" style="border:1px solid #f5f5f5;height: 120px;padding: 16px;margin-top: 10px;">
+                <div class="txt" style="float: left;">
+                    <div class="txt-title">
+                        <a href="/jz?id={{ article.id }}">{{ article.title|truncatewords:"10" }}</a>
+                    </div>
+                    <ul class="txt-field" style="margin-top: 8px;width: 420px;display: block;">
+                        <li>
+                            <span>工作类型：{{ article.worktype.name }}
+                        </span></li>
+                        <li><span>评论数：</span><span style="color: #f60;">{{ article.comment_set.count }}</span>
+                        </li>
+                        <li><span>发布时间：</span>{{ article.date|date:"Y/m/d H:i:s"}}</li>
+                        <li><span>申请数：</span><span style="color: #f60;">{{ article.usertojob_set.count }}</span></li>
+                    </ul>
+                </div>
+                <div class="item-bottom">
+                    <button class="btn btn-danger wdfb_del" sid="{{ article.id }}">删  除</button>
+                </div>
+                <div class="item-bottom">
+                    <button class="btn btn-primary link_update " sid="{{ article.id }}">修  改</button>
+                </div>
+                <div class="item-bottom">
+                    <button class="btn btn-warning xiajia" sid="{{ article.id }}" xiajia="{% if article.xiajia == 0 %}1{% elif article.xiajia == 1 %}0{% endif %}">{% if article.xiajia == 0 %}下架{% elif article.xiajia == 1 %}已下架{% endif %}
+                    
+                    </button>
+                </div>
+                <div class="salary">
+                    <span class="money"><button class="btn btn-info link_a"  sid="{{ article.id }}">处理申请</button></span>
+                </div>
+
+                <div class="salary">
+                    <span class="money"><em>{{ article.wages.name }}</em></span>
+                </div>
+            </div>
+        {% endfor %}
+
+    <div class="cg" style="margin-top: 43px;margin-bottom: 62px;">
+        <div class="pageBox" data-widget="app/ms_v2/common/list_page.js#pagination">
+            {{ pagestr }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(function () {
+            $(".link_update").click(function () {
+                var $sid = $(this).attr("sid");
+                var _href = "/article_update?sid="+$sid;
+                window.location.href = _href;
+            });
+
+            $(".link_a").click(function () {
+                var $sid = $(this).attr("sid");
+                var _href = "/usertojob?sid="+$sid;
+                window.location.href = _href;
+            });
+
+            $(".wdfb_del").click(function () {
+                var $sid = $(this).attr("sid");
+                $.getJSON("/article_del/",{"sid": $sid} , function (json) {
+                    if(json["status"] === 302){
+                        window.open("user_login", "_self");
+                    }else if(json["status"] === 200){
+                        alert("删除成功！");
+                        location.reload();
+                    }
+                });
+            });
+
+            $(".xiajia").click(function () {
+                var $sid = $(this).attr("sid");
+                var $xiajia = $(this).attr("xiajia");
+                $.getJSON("/article_xiajia/",{"sid": $sid, "xiajia":$xiajia} , function (json) {
+                    if(json["status"] === 302){
+                        window.open("user_login", "_self");
+                    }else if(json["status"] === 200){
+                        location.reload();
+                    }
+                });
+            })
+        })
+    </script>
+{% endblock %}

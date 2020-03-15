@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block leader %}
+
+    <ul>
+        <li class="on"><a href="/index/">首页</a></li>
+        <li ><a href="/zjz/">信息中心</a></li>
+        <li ><a href="/wyfb/">我要发布</a></li>
+        <li><a href="/lxwm/">联系我们</a></li>
+    </ul>
+
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="/static/lib/css/zjz.css" >
+    <style>
+        .row{
+            padding: 25px;
+            background: #f8f8f8;
+        }
+    .title{
+        border-bottom: 1px #EEEEEE solid;
+        margin: 0 auto;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .content{
+        padding: 40px;
+        font-size: 16px;
+    }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="cg pozi" style="color: #707070; font-size: 12px;line-height: 30px;margin-top: 10px;">当前位置：<a href="/index/">首页</a> > <a href="/notice/">通告</a> > {{ res.title|slice:10 }}...<input type="hidden" class="for_sid" sid="{{ res.id }}" ></div>
+    <div class="cg container" style="margin-top: 14px;min-height: 800px;">
+        <div class="row ">
+            <div class="title">
+                <p>{{ res.title }}</p>
+                <p>{{ res.datetime }}</p>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="content">
+                <p>
+                    {{ res.content }}
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script>
+        $(function () {
+            var sid = $(".for_sid").attr("sid")
+            $(".chuli").click(function () {
+                var $pd = $(this).attr("pd");
+                var uid = $(this).attr("uid");
+                $.post('/usertojob/', {"pd":$pd,"sid":sid, "uid":uid,csrfmiddlewaretoken:'{{ csrf_token }}'},function (json) {
+                    if(json["status"] === 302){
+                        window.open("user_login", "_self");
+                    }else if(json["status"] === 200){
+                        location.reload();
+                    }
+                },"json");
+            })
+        })
+    </script>
+{% endblock %}

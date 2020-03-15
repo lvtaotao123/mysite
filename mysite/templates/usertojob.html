@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block leader %}
+
+    <ul>
+        <li class="on"><a href="/index/">首页</a></li>
+        <li ><a href="/zjz/">信息中心</a></li>
+        <li ><a href="/wyfb/">我要发布</a></li>
+        <li><a href="/lxwm/">联系我们</a></li>
+    </ul>
+
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="/static/lib/css/zjz.css" >
+    <style>
+        .header {
+            height: 35px;
+            line-height: 35px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #646987;
+            background-color: #e3e8ee;
+            text-align: left;
+        }
+        .tablebody {
+            margin-top: 15px;
+            text-align: left;
+        }
+        .tablebody .row {
+            margin-top: 10px;
+            background-color: #F8F8F8;
+            height: 70px;
+            line-height: 70px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="cg pozi" style="color: #707070; font-size: 12px;line-height: 30px;margin-top: 10px;">当前位置：<a href="/index/">首页</a> > <a href="/wdfb/">我的发布</a> > {{ article.title|truncatewords:"10" }}<input type="hidden" class="for_sid" sid="{{ article.id }}" ></div>
+    <div class="cg container" style="margin-top: 14px;min-height: 800px;">
+        <div class="row tablebody header">
+                <div class="col-xs-3">
+                    申请人
+                </div>
+                <div class="col-xs-3">
+                    信用值
+                </div>
+                <div class="col-xs-3">
+                    申请时间
+                </div>
+                <div class="col-xs-3">
+                    操作
+                </div>
+            </div>
+        <div class="tablebody">
+            {% for u in ujs %}
+                <div class="row">
+                    <div class="col-xs-3">
+                        <img src="{{ u.uid.imagepath }}" width="30px" height="30px">{{ u.uid.username }}
+                    </div>
+                    <div class="col-xs-3">
+                        {{ u.uid.xinyong }}
+                    </div>
+                    <div class="col-xs-3">
+                        {{ u.date|date:"Y/m/d H:i" }}
+                    </div>
+                    <div class="col-xs-3">
+                        <button class="btn btn-success btn-xs chuli" pd="1" uid="{{ u.uid.id }}">接受</button>
+                        <button class="btn btn-danger btn-xs chuli" pd="0" uid="{{ u.uid.id }}">不接受</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        $(function () {
+            var sid = $(".for_sid").attr("sid")
+            $(".chuli").click(function () {
+                var $pd = $(this).attr("pd");
+                var uid = $(this).attr("uid");
+                $.post('/usertojob/', {"pd":$pd,"sid":sid, "uid":uid,csrfmiddlewaretoken:'{{ csrf_token }}'},function (json) {
+                    if(json["status"] === 302){
+                        window.open("user_login", "_self");
+                    }else if(json["status"] === 200){
+                        location.reload();
+                    }
+                },"json");
+            })
+        })
+    </script>
+{% endblock %}

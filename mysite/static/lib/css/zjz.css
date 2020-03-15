@@ -1,0 +1,92 @@
+        .pozi a{
+            color: #4b4b4b;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .pozi {
+            font-size: 13px;
+        }
+        .txt-title{
+            height: 32px;
+        }
+        .txt-title  a{
+            color: #404040;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .txt-title a{
+            font: 400 16px/2em "hiragino sans gb", "microsoft yahei";
+            float: left;
+        }
+        ol, ul, li{
+            list-style: none;
+        }
+        .txt-field li{
+            float: left;
+            line-height: 20px;
+            width: 200px;
+            padding-right: 10px;
+            height: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #707070;
+            font: 12px/1.5 arial, helvetica, clean, sans-serif;
+        }
+        .item-bottom a{
+            display: block;
+            background-color: #fd8000;
+            color: #fff;
+            font: 400 16px/40px "hiragino sans gb", "microsoft yahei";
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .item-bottom a:hover{
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .item-bottom{
+            float: right;
+            width: 150px;
+            height: 40px;
+            margin-top: 20px;
+        }
+        .salary{
+            float: right;
+            margin: 20px 50px 0 0;
+            line-height: 40px;
+            color: #999;
+        }
+    .salary .money{
+            color: #f60;
+            font-size: 16px;
+            margin-right: 5px;
+            vertical-align: bottom;
+            font-weight: 700;
+    }
+    .pageBox{
+        margin-bottom: 50px;
+        clear: both;
+        text-align: center;
+        height: 34px;
+    }
+    .pageBox li {
+        display: inline;
+        margin: 0 5px;
+        font: 400 16px / 34px "hiragino sans gb", "microsoft yahei";
+    }
+    .pageBox li a {
+        display: inline-block;
+        height: 34px;
+        line-height: 34px;
+        color: #707070;
+        background-color: #F8F8F8;
+        text-decoration: none;
+        padding: 0 15px;
+    }
+    .pageBox .curPage, .pageBox li a:hover {
+        background-color: #fed738;
+        color: #fff;
+    }

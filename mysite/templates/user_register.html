@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <title>注册</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="alternate icon" type="image/png" href="images/favicon.png">
+    <link rel='icon' href='favicon.ico' type='image/x-ico' />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="/static/lib/css/default.min.css?t=227" />
+    <link rel="stylesheet" href="/static/lib/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/lib/css/iconfont.css" />
+    <style>
+        .user-div ul li input{
+            width: 70%;
+        }
+
+    </style>
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+
+
+</head>
+<body>
+    ﻿<header class="hd1">
+    <div class="cg">
+        <div class="hd1-left">
+            <a href="/index/"><img class="am-hide-md-down" src="/static/pic/699aed80fbe5d521631fbadf66dc1ccc_12799.png" /></a>
+        </div>
+        <div class="hd1-right">
+            <a href="/user_login/">登录</a>
+            <a href="/user_register/">注册</a>
+        </div>
+    </div>
+</header>
+   
+
+     <div class="user">
+         <div class="cgs">
+             <div class="am-u-sm-12 am-u-md-12 am-u-lg-7">
+                 <div class="user-div">
+                     <h1>用户注册</h1>
+                     <form action="{% url 'user_register' %}" method="POST" >
+                         {% csrf_token %}
+                         <ul>
+                                 <li><i>&#xe633;</i>{{ user_form.username }}<span id="name_error"></span></li>
+
+                             <li><i>&#xe680;</i>{{ user_form.password }}<span id="pwd_error"></span></li>
+                             <li><i>&#xe680;</i>{{ user_form.confirm_pwd }}<span id="confirm_pwd_error"></span></li>
+                             <li><i>&#xe681;</i>{{ user_form.email }}<span id="email_error"></span>
+                             <input type="bottom" class="btn btn-primary btn-sm btn-outline-primary " value="获取验证码" id="get_token" style="display:none;height:23px;width:76px;margin:auto;padding: 2px 7px;font-size:12px;cursor:pointer;"></li>
+                             <li><i>&#xe6ed;</i>{{ user_form.mobile }}<span id="mobile_error"></span></li>
+                             <li><i>&#xe680;</i>{{ user_form.token }}</li>
+                             <li class="tp">
+                                 <input type="hidden" id="usertp" name="usertp" value="0">
+                                <div class="usertp">
+                                  <button type="button" class="btn btn-success" name="tp" value="0" >学生</button>
+                                  <button type="button" class="btn"  name="tp" value="1" >商铺</button>
+                                </div>
+                             </li>
+                         </ul>
+                         <button style="width: 100%;padding: .8rem 0;border-radius: 5px;display: block;background: #0076ca;color: #fff;border: 0;float: left; margin-top: 2rem;">注册</button>
+                     </form>
+                 </div>
+             </div>
+             <div class="am-hide-sm am-hide-md am-u-lg-5">
+                 <div class="user-right">
+                     <a href="#">已有帐号</a>
+                     <button id="d_lo">立即登录</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+<script src="/static/lib/jquery-3.4.1.js"></script>
+<script src="/static/lib/bootstrap.min.js"></script>
+<script>
+    $(function () {
+        $(".usertp button").click(function () {
+            $(this).toggleClass("btn-success");
+            $(this).siblings().toggleClass("btn-success");
+
+
+            var a = $(".usertp .btn-success").val();
+            $("#usertp").val(a);
+
+        });
+
+        $("#d_lo").click(function () {
+            window.open('/user_login/', '_self');
+        });
+
+        $("#username").change(function () {
+            var v = $("#username").val().trim();
+            if (v.length){
+                $.getJSON("/user_check_name/",{"username": v}, function (data) {
+                    if (data["status"] === 300){
+                        $("#name_error").html("*用户名重复").css('color','red');
+                    }else if (data["status"] === 200){
+                        $("#name_error").html("&radic;").css('color','green');
+                    }
+                })
+            }
+        });
+
+        $("#mobile").change(function () {
+            var v = $("#mobile").val().trim();
+            if (v.length){
+                $.getJSON("/user_check_mobile/",{"mobile": v}, function (data) {
+                    if (data["status"] === 300){
+                        $("#mobile_error").html("*手机重复").css('color','red');
+                    }else if (data["status"] === 200){
+                        $("#mobile_error").html("&radic;").css('color','green');
+                    }else if (data["status"] === 301){
+                        $("#mobile_error").html("*格式错误;").css('color','red');
+                    }
+                })
+            }
+        });
+
+        $("#confirm_pwd").change(function () {
+            var v1 = $("#confirm_pwd").val().trim();
+            var v2 = $("#password").val().trim();
+            if (v1 == v2){
+                $("#confirm_pwd_error").html("&radic;").css('color','green');
+            }else{
+                $("#confirm_pwd_error").html("*密码不一致").css('color','red');
+            }
+        });
+
+        $("#password").change(function () {
+            var v = $("#password").val().trim();
+            if (v.length){
+                $.getJSON("/user_check_pwd/",{"pwd": v}, function (data) {
+                   if (data["status"] === 200){
+                        $("#pwd_error").html("&radic;").css('color','green');
+                    }else{
+                       $("#pwd_error").html("格式错误").css('color','red');
+                   }
+                })
+            }
+        });
+
+        $("#email").keyup(function () {
+            var v = $("#email").val().trim();
+            if (v.length){
+                $.getJSON("/user_check_email/",{"email": v}, function (data) {
+                   if (data["status"] === 200){
+                         $("#get_token").css('display','');
+                        $("#email_error").html("&radic;").css('color','green');
+                    }else if(data["status"] === 301) {
+                        $("#get_token").css("display", "none");
+                       $("#email_error").html("*格式错误").css('color','red');
+                   }
+                   else if(data["status"] === 300) {
+                       $("#get_token").css("display", "none");
+                       $("#email_error").html("*邮箱已存在").css('color','red');
+                   }
+                })
+            }
+        });
+
+        $("#get_token").click(function () {
+            var count = 60;
+            $("#get_token").val(count+"秒后").attr("disabled","disabled");
+            var v = $("#email").val().trim();
+            if (v.length){
+                $.getJSON("/user_send_mail/",{"email": v}, function (data) {
+                    console.log(data);
+                })
+            }else{
+                $("#get_token").css("display", "none");
+                $("#email_error").html("*当前邮箱为空").css('color','red');
+            }
+            var resend = setInterval(function () {
+                count--;
+                console.log(count);
+                if (count> 0) {$("#get_token").val(count+"秒后")}
+                else{clearInterval(resend);$("#get_token").val("获取验证码").removeAttr('disabled');}
+
+            }, 1000);
+
+        });
+
+        $("#email").focus(function () {
+            $("#email_error").html('');
+
+        });
+
+
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block leader %}
+
+    <ul>
+        <li class="on"><a href="/index/">首页</a></li>
+        <li ><a href="/zjz/">信息中心</a></li>
+        <li ><a href="/wyfb/">我要发布</a></li>
+        <li><a href="/lxwm/">联系我们</a></li>
+    </ul>
+
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="/static/lib/css/zjz.css" >
+    <style>
+        .header_ul{
+            padding: 6px;
+        }
+        .content_xxzx{
+            padding: 10px 13px;
+
+        }
+        .top_title .title_{
+            line-height: 24px;
+            font-size: 14px;
+            color:#333;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .title-time{
+            color: #999;
+            font-size: 13px;
+            line-height: 24px;
+            margin-right:  20px;
+        }
+
+        .float-left-img{
+            float: left;
+            width: 60px;
+            height: 40px;
+        }
+        .float-left-img img{
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .float-right-content{
+            height: 60px;
+            width: 60px;
+            float: right;
+            overflow: hidden;
+        }
+        .top_tip{
+            margin-top: 5px;
+        }
+        .huifu_btn, .float-right-content{
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="cg pozi" style="color: #707070; font-size: 12px;line-height: 30px;margin-top: 10px;">当前位置：<a href="/index/">首页</a> >  消息中心</div>
+    <div class="cg container" style="background-color: rgba(255,255,255,0.8);min-height: 800px;">
+        <div class="row">
+            <div class="header_ul col-lg-12">
+                <ul class="nav nav-tabs">
+                  <li role="presentation" {% if tp == 1 %} class="active" {% endif %}><a href="/xxzx?tp=1">系统通知</a></li>
+                  <li role="presentation" {% if tp == 2 %} class="active" {% endif %}><a href="/xxzx?tp=2">回复我的</a></li>
+                </ul>
+            </div>
+        </div>
+        {% for row in rows %}
+            <div class="row " style="border-bottom: 1px solid rgb(221, 221, 221);">
+                <div class="col-lg-12 header_ul">
+                    <div class="content_xxzx">
+                        <div class="float-left-img"><img src="{{ row.userid.imagepath }}"></div>
+                        <div style="float: left;">
+                            <div class="top_title"><span class="title_">{{ row.userid.username }}</span><span class="title-time">回复了</span>{{ row.userid.username }}</div>
+                            <div class="top_bottom">{{ row.content }}</div>
+                            <div class="top_tip" ><span class="title-time">{{ row.date|date:"Y年m月d日 H:i:s" }}</span><span class="title-time huifu_btn">回复</span></div>
+                        </div>
+                        <div class="float-right-content"><a href="/jz/?id={{ row.subjectid.id }}">{{ row.subjectid.title }}</a></div>
+                        <div class="huifu hide">
+                           <textarea style="width: 100%;height: 60px;margin-top: 10px;" class="for_comment">
+                            </textarea>
+                            <button type="button" s_id="{{ row.subjectid.id }}" pid="{{ row.id }}" class="btn btn-info huifu-click" style="display: block;margin-top: 3px;">回复</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        $(function () {
+            $(".huifu_btn").click(function () {
+                $(this).parent().parent().siblings('.huifu').toggleClass("hide");
+            });
+            $(".huifu-click").click(function () {
+                var content = $(this).prev(".for_comment").val().trim();
+                var pid = $(this).attr("pid");
+                var s_id = $(this).attr("s_id");
+                if(content.length != 0){
+                    $.getJSON("/comment_subject/",{"pid":pid,"content":content, "s_id":s_id}, function (json) {
+                        if(json["status"] === 302){window.open("/user_login/","_self");}
+                        else if(json["status"] === 200){location.reload();}
+                    })
+                }
+            });
+        })
+    </script>
+{% endblock %}

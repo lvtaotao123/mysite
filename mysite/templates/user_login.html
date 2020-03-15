@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <title>登陆</title>
+    <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="alternate icon" type="image/png" href="images/favicon.png">
+<link rel='icon' href='favicon.ico' type='image/x-ico' />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<link rel="stylesheet" href="/static/lib/css/default.min.css?t=227" />
+<!--[if (gte IE 9)|!(IE)]><!-->
+
+<!--<![endif]-->
+
+<![endif]-->
+
+</head>
+<body>
+    ﻿<header class="hd1">
+    <div class="cg">
+        <div class="hd1-left">
+            <a href="../index.html"><img class="am-hide-md-down" src="/static/pic/699aed80fbe5d521631fbadf66dc1ccc_12799.png" /></a>
+
+        </div>
+        <div class="hd1-right">
+            <a href="/user_login/">登录</a>
+            <a href="/user_register/">注册</a>
+        </div>
+    </div>
+</header>
+   
+
+     <div class="user">
+         <div class="cgs">
+             <div class="am-u-sm-12 am-u-md-12 am-u-lg-7">
+                 <form method="post" action="{% url 'user_login' %}">
+                     {% csrf_token %}
+                 <div class="user-div">
+                     <h1>用户登录</h1>
+                     <ul>
+                         <li><i>&#xe681;</i><input type="text" name="username" value="" placeholder="请输入电话/邮箱" /></li>
+                         <li><i>&#xe680;</i><input type="password" name="password" value="" placeholder="请输入密码" /></li>
+                     </ul>
+                     <span><a href="{% url 'user_forget' %}">忘记密码</a></span>
+                     <button type="submit">登录</button>
+                 </div>
+                 </form>
+             </div>
+             <div class="am-hide-sm am-hide-md am-u-lg-5">
+                 <div class="user-right">
+                     <a href="#">还没有帐号</a>
+                     <button id="regi">立即注册</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+</body>
+<script src="/static/lib/jquery-3.4.1.js"></script>
+<script>
+    $(function () {
+        $("#regi").click(function(){
+            window.open("/user_register/", "_self");
+        })
+    })
+</script>
+</html>

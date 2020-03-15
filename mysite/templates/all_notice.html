@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block leader %}
+
+    <ul>
+        <li class="on"><a href="/index/">首页</a></li>
+        <li ><a href="/zjz/">信息中心</a></li>
+        <li ><a href="/wyfb/">我要发布</a></li>
+        <li><a href="/lxwm/">联系我们</a></li>
+    </ul>
+
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="/static/lib/css/zjz.css" >
+    <style>
+        .cgss{
+            width: 920px;
+            margin: 0 auto;
+            padding: 0 70px;
+        }
+        .container {
+            border:1px solid #dedede;
+            width: 920px;
+            margin: 0 auto;
+            min-height: 800px;
+        }
+        h1{
+            font-size: 1.8rem;
+        }
+        .col-lg-11{
+            margin-left: 2rem;
+            border-bottom: 1px dotted #dedede;
+        }
+        .notice{
+            height: 90px;
+            padding: 15px 10px;
+        }
+        .title{
+            width: 500px;
+            font-size: 16px;
+            height: 24px;
+            line-height: 24px;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+        }
+    .content{
+        width: 500px;
+        font-size: 13px;
+        height: 16px;
+        line-height: 16px;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+        margin-top: 5px;
+    }
+    .date-tip{
+        font-size: 13px;
+        margin-top: 4px;
+        margin-left: 10px;
+    }
+    .row a{
+        cursor: pointer;
+        text-decoration: none;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="cgss pozi" style="color: #707070; font-size: 12px;line-height: 30px;margin-top: 10px;">当前位置：<a href="/index/">首页</a> > 公告</div>
+    <div class="cgss " style="margin-top: 14px;">
+        <div class="container">
+            <div class="row"><div class="col-lg-11 " ><h1>网站公告</h1></div></div>
+            {% for i in res %}
+                <div class="row not">
+                    <div class="col-lg-11 notice" >
+                        <div class="title"><a href="/notice?nid={{ i.id }}"><strong>{{ i.title }}</strong></a></div>
+                        <div class="content">{{ i.content }}</div>
+                        <div class="date-tip">时间：{{ i.datetime|date:"Y-m-d" }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,372 @@
+{% extends "admin_page/master.html" %}
+{% block css %}
+    <style>
+        .container-fluid span{
+            font-size: 10px;
+            color: red;
+            font-family: "Baskerville Old Face";
+        }
+    </style>
+{% endblock %}
+{# 当前是用户管理模块 #}
+{% block leftMeun %}
+<div class="leftMeun" id="leftMeun">
+        <div id="logoDiv">
+            <p id="logoP"><img id="logo" alt="校园兼职网" src="/static/admin/images/logo.png"><span>校园兼职网</span></p>
+        </div>
+        <div id="personInfor">
+            <p id="userName">管理员</p>
+            <p><span>442203811@qq.com</span> More
+
+            </p>
+            <p>&nbsp;&nbsp;&nbsp;
+                    <a href="{% url 'myadmin:logout' %}">退出登录</a>
+                </p>
+        </div>
+        <div class="meun-title">账号管理</div>
+        <div class="meun-item  "><a href="/admin/all_user"><img src="/static/admin/images/icon_chara_grey.png">用户管理</a></div>
+        <div class="meun-item" ><a href="/admin/user_shenhe"><img src="/static/admin/images/icon_source.png">用户申请</a></div>
+
+        <div class="meun-title">文章管理</div>
+        <div class="meun-item meun-item-active"><a href="/admin/all_article"><img src="/static/admin/images/icon_house_grey.png">全部文章</a></div>
+        <div class="meun-item"><a href="/admin/article_shenhe"><img src="/static/admin/images/icon_change_grey.png">文章审核</a></div>
+        <div class="meun-item"><a href="/admin/tags"><img src="/static/admin/images/icon_card_grey.png">文章标签管理</a></div>
+        <div class="meun-item"><a href="/admin/weigui"><img src="/static/admin/images/icon_char_grey.png">违规管理</a></div>
+
+        <div class="meun-title">ADMIN</div>
+        <div class="meun-item"><a href="/admin/notice"><img src="/static/admin/images/icon_user.png">公告栏</a></div>
+        <div class="meun-item"><a href="/admin/manager"><img src="/static/admin/images/icon_rule_grey.png">修改密码</a></div>
+    </div>
+{% endblock %}
+
+{% block tab-content %}
+<div  id="user">
+        <div class="check-div form-inline">
+            <div class="col-xs-3">
+                <button class="btn btn-yellow btn-xs" data-toggle="modal" data-target="#addArticle">新增帖子 </button>
+                {{ callback }}
+
+            </div>
+
+            <div class="col-xs-4">
+                <form action="/admin/article_input/" method="post">
+                    {% csrf_token %}
+                    <input type="text" class="form-control input-sm" name="input_value" placeholder="输入标题或者用户搜索">
+                    <button class="btn btn-white btn-xs ">查 询 </button>
+                </form>
+            </div>
+
+        </div>
+        <div class="data-div">
+            <div class="row tableHeader">
+                <div class="col-xs-4 ">
+                    标题
+                </div>
+                <div class="col-xs-2">
+                    发布人
+                </div>
+                <div class="col-xs-2">
+                    申请人数
+                </div>
+                <div class="col-xs-2">
+                    是否下架
+                </div>
+                <div class="col-xs-2">
+                    操作
+                </div>
+            </div>
+
+            <div class="tablebody">
+                {% for article in articles %}
+                    <div class="row">
+                        <div class="col-xs-4 ">
+                            {{ article.title }}
+                        </div>
+                        <div class="col-xs-2">
+                            {{ article.user.username }}
+                        </div>
+                        <div class="col-xs-2">
+                            {{ article.usertojob_set.all.count }}
+                        </div>
+                        <div class="col-xs-2">
+                            {% if article.xiajia == 0 %}
+                               否
+                            {% else  %}
+                                是
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-2">
+
+                        </div>
+                        <div class="col-xs-2">
+                            <button class="btn btn-success btn-xs more_data"  aid="{{ article.id }}" data-toggle="modal" data-target="#reviseArticle">修改</button>
+                            <button class="btn btn-danger btn-xs del_a" data-toggle="modal" data-target="#deleteArticle" aid="{{ article.id }}">删除</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+        <!--页码块-->
+
+
+                {{ pagestr }}
+
+
+
+        <!--弹出添加用户窗口-->
+        <div class="modal fade" id="addArticle" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form-horizontal" action="/admin/all_article/" method="post">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">添加帖子</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="container-fluid">
+
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="sName" class="col-xs-3 control-label">{{ fm.title.label }}</label>
+                                    <div class="col-xs-8 ">
+                                        {{ fm.title }}<span>{{ form.title.errors.0 }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sLink" class="col-xs-3 control-label">{{ fm.place.label }}</label>
+                                    <div class="col-xs-8 ">
+                                        {{ fm.place }}<span>{{ form.place.errors.0 }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">{{ fm.desc.label }}</label>
+                                    <div class="col-xs-8">
+                                        {{ fm.desc }}<span>{{ form.desc.errors.0 }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">{{ fm.tp.label }}</label>
+                                    <div class="col-xs-8">
+                                        {{ fm.tp }}<span>{{ form.tp.errors.0 }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">{{ fm.worktp.label }}</label>
+                                    <div class="col-xs-8">
+                                        {{ fm.worktp }}<span>{{ form.worktp.errors.0 }}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sKnot" class="col-xs-3 control-label">{{ fm.wagetp.label }}</label>
+                                    <div class="col-xs-8">
+                                        {{ fm.wagetp }}<span> {{ form.wagetp.errors.0 }} </span>
+                                    </div>
+                                </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                        <input type="submit" class="btn btn-xs btn-green" id="baocun" value="保存">
+                    </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <!--弹出修改article窗口-->
+        <div class="modal fade" id="reviseArticle" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">修改</h4>
+                    </div>
+                    <form class="form-horizontal" action="/admin/update_article/" method="post">
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                {% csrf_token %}
+                                    <input type="hidden" name="aid" class="aaid">
+                                    <div class="form-group ">
+                                        <label for="sName" class="col-xs-3 control-label">标题：</label>
+                                        <div class="col-xs-8 c_title">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sLink" class="col-xs-3 control-label">地点：</label>
+                                        <div class="col-xs-8 c_place">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sOrd" class="col-xs-3 control-label">描述：</label>
+                                        <div class="col-xs-8 c_desc">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sKnot" class="col-xs-3 control-label">帖子类型：</label>
+                                        <div class="col-xs-8 c_tp">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sKnot" class="col-xs-3 control-label">工资范围：</label>
+                                        <div class="col-xs-8 c_wagetp">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sKnot" class="col-xs-3 control-label">工作类型：</label>
+                                        <div class="col-xs-8  c_worktp">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="situation" class="col-xs-3 control-label">发布人：</label>
+                                        <div class="col-xs-8 c_user">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sKnot" class="col-xs-3 control-label">申请次数：</label>
+                                        <div class="col-xs-8 c_count">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sKnot" class="col-xs-3 control-label">申请通过：</label>
+                                        <div class="col-xs-8 c_pass">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sKnot" class="col-xs-3 control-label">发布时间：</label>
+                                        <div class="col-xs-8 c_date">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sKnot" class="col-xs-3 control-label">审核状况：</label>
+                                        <div class="col-xs-8 c_shenhe">
+
+                                        </div>
+                                    </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                            <button type="submit" class="btn btn-xs btn-green">保 存</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <!--弹出删除用户警告窗口-->
+        <div class="modal fade" id="deleteArticle" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">提示</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            确定要删除该帖子？删除后不可恢复！
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                        <button type="button" class="btn  btn-xs btn-danger deleteArticle" >保 存</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function(){
+            var $body = $('body');
+            $body.on('change', 'select:has(option[href])', function(e) {
+                var _this = $(this),
+                    _href = _this.find('option:selected').attr('href');//获取要跳转的地址
+                location.href = _href; //跳转
+            });
+
+        $(".more_data").click(function () {
+                $.ajax({
+                    url: '/admin/ajax_article/',
+                    data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'aid':$(this).attr("aid") },
+                    type: 'POST',
+                    traditional: true,
+                    dataType:'JSON',
+                    success: function(obj){
+                        if (obj["status"] == 302){
+                            window.open("/admin/login/", target="_self");
+                        }else{
+                        $('.c_title').html(obj["title"]);
+                        $('.c_place').html(obj["place"]);
+                        $('.c_desc').html(obj["desc"]);
+                        $('.c_worktp').html(obj["work"]);
+                        $('.c_wagetp').html(obj["wagetp"]);
+                        $('.c_user').text(obj["author"]);
+                        $('.c_tp').html(obj["tp"]);
+                        $('.c_count').text(obj["count"]);
+                        $('.c_pass').text(obj["pass"]);
+                        $('.c_date').text(obj["date"]);
+                        $('.c_shenhe').text(obj["shenhe"]);
+                        $('.aaid').val(obj["aid"]);}
+                    },
+                })
+            });
+        $(".del_a").click(function () {
+            var aid = $(this).attr("aid");
+            $(".deleteArticle").attr("aid",aid);
+        })
+
+        $(".deleteArticle").click(function () {
+            var aid = $(this).attr("aid");
+            $('#deleteArticle').removeClass("in");
+            $('#deleteArticle').attr("aria-hidden", "true");
+            $('#deleteArticle').css({'display':'none','padding-right':''})
+            $(".modal-backdrop").remove();
+            $.ajax({
+                    url: '/admin/del_article/',
+                    data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'aid':aid },
+                    type: 'POST',
+                    traditional: true,
+                    dataType:'JSON',
+                    success: function(obj){
+                        if (obj["status"] == 302){
+                            window.open("/admin/login", target="_self");
+                        }else{
+                        alert(obj['data']);
+                        }
+
+                    },
+                })
+        });
+
+            })
+    </script>
+{% endblock %}

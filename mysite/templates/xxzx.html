@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block leader %}
+
+    <ul>
+        <li class="on"><a href="/index/">首页</a></li>
+        <li ><a href="/zjz/">信息中心</a></li>
+        <li ><a href="/wyfb/">我要发布</a></li>
+        <li><a href="/lxwm/">联系我们</a></li>
+    </ul>
+
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="/static/lib/css/zjz.css" >
+    <style>
+        .header_ul{
+            padding: 6px;
+        }
+        .content_xxzx{
+            height: 90px;
+            padding: 10px 13px;
+            border-bottom: 1px solid rgb(221, 221, 221);
+        }
+        .top_title .title_{
+            line-height: 24px;
+            font-size: 14px;
+            color:#333;
+            font-weight: bold;
+            font-family: "Microsoft Himalaya";
+        }
+        .title-time{
+            color: #999;
+            font-size: 13px;
+            line-height: 24px;
+            margin: 0 20px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="cg pozi" style="color: #707070; font-size: 12px;line-height: 30px;margin-top: 10px;">当前位置：<a href="/index/">首页</a> >  消息中心</div>
+    <div class="cg container" style="background-color: rgba(255,255,255,0.8);min-height: 800px;">
+        <div class="row">
+            <div class="header_ul col-lg-12">
+                <ul class="nav nav-tabs">
+                  <li role="presentation" {% if tp == 1 %} class="active" {% endif %}><a href="/xxzx?tp=1">系统通知</a></li>
+                  <li role="presentation" {% if tp == 2 %} class="active" {% endif %}><a href="/xxzx?tp=2">回复我的</a></li>
+                </ul>
+            </div>
+        </div>
+        {% for row in rows %}
+            <div class="row">
+                <div class="col-lg-12 header_ul">
+                    <div class="content_xxzx">
+                        <div class="top_title"><span class="title_">{{ row.title }}</span><span class="title-time">{{ row.datetime|date:"Y年m月d日 H:i:s" }}</span></div>
+                        <div class="top_bottom">{{ row.content }}</div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        $(function () {
+
+        })
+    </script>
+{% endblock %}

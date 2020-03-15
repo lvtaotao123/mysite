@@ -1,0 +1,227 @@
+{% extends "admin_page/master.html" %}
+
+
+{% block leftMeun %}
+    <div class="leftMeun" id="leftMeun">
+        <div id="logoDiv">
+            <p id="logoP"><img id="logo" alt="校园兼职网" src="/static/admin/images/logo.png"><span>校园兼职网</span></p>
+        </div>
+        <div id="personInfor">
+            <p id="userName">管理员</p>
+            <p><span>442203811@qq.com</span> More
+
+            </p>
+            <p>&nbsp;&nbsp;&nbsp;
+                    <a href="{% url 'myadmin:logout' %}">退出登录</a>
+                </p>
+        </div>
+        <div class="meun-title">账号管理</div>
+        <div class="meun-item  "><a href="/admin/all_user"><img src="/static/admin/images/icon_chara_grey.png">用户管理</a></div>
+        <div class="meun-item" ><a href="/admin/user_shenhe"><img src="/static/admin/images/icon_source.png">用户申请</a></div>
+
+        <div class="meun-title">文章管理</div>
+        <div class="meun-item"><a href="/admin/all_article"><img src="/static/admin/images/icon_house_grey.png">全部文章</a></div>
+        <div class="meun-item "><a href="/admin/article_shenhe"><img src="/static/admin/images/icon_change_grey.png">文章审核</a></div>
+        <div class="meun-item "><a href="/admin/tags"><img src="/static/admin/images/icon_card_grey.png">文章标签管理</a></div>
+        <div class="meun-item meun-item-active"><a href="/admin/weigui"><img src="/static/admin/images/icon_char_grey.png">违规管理</a></div>
+
+        <div class="meun-title">ADMIN</div>
+        <div class="meun-item"><a href="/admin/notice"><img src="/static/admin/images/icon_user.png">公告栏</a></div>
+        <div class="meun-item "><a href="/admin/manager"><img src="/static/admin/images/icon_rule_grey.png">修改密码</a></div>
+    </div>
+{% endblock %}
+
+
+{% block tab-content %}
+<div id="article_sh">
+
+                <div class="check-div form-inline" style="">
+                    <div class="col-lg-4 col-xs-7 col-md-6" >
+                        <form action="/admin/find_report/" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" class=" form-control input-sm " name="url_info" id="url_info">
+                            <input type="text" class=" form-control input-sm " name="txt" placeholder="搜索举报人被举报人">
+                            <button class="btn btn-white btn-xs" type="submit">查 询 </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="data-div">
+                    <div class="row tableHeader">
+                        <div class="col-xs-1">
+                            举报人
+                        </div>
+                        <div class="col-xs-1">
+                            发布人
+                        </div>
+                        <div class="col-xs-4">
+                            举报内容
+                        </div>
+                        <div class="col-xs-2">
+                            举报时间
+                        </div>
+                        <div class="col-xs-1">
+                            举报文章
+                        </div>
+                        <div class="col-xs-3">
+                            操作
+                        </div>
+                    </div>
+                    <div class="tablebody">
+                        {% for report in reports %}
+                            <div class="row">
+                                <div class="col-xs-1 ">
+                                    {{ report.uid.username }}
+                                </div>
+                                <div class="col-xs-1">
+                                    {{ report.sid.user.username }}
+                                </div>
+                                <div class="col-xs-4">
+                                    {{ report.content }}
+                                </div>
+                                <div class="col-xs-2">
+                                    {{ report.datetime|date:"Y-m-d H:i:s" }}
+                                </div>
+                                <div class="col-xs-1">
+                                    <button class="btn btn-yellow btn-xs" id="shenhe_ajax" data-toggle="modal" aid="{{ report.sid.id }}" data-target="#for_article">详情 </button>
+                                </div>
+                                <div class="col-xs-3">
+                                    <button class="btn btn-success btn-xs shenhe_sub"  rid="{{ report.id }}" pd="1">举报成功</button>
+                                    <button class="btn btn-danger btn-xs shenhe_sub"  rid="{{ report.id }}" pd="0">举报不成功</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+                <!--页码块-->
+                {{ pagestr }}
+
+
+                <!--弹出查看文章窗口-->
+                <div class="modal fade" id="for_article" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document" style="width: 700px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">文章详情</h4>
+                            </div>
+
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        <div class="form-group row">
+
+                                            <label for="sName" class="col-xs-3 control-label">标题</label>
+                                            <div class="col-xs-8 article_title">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="sName" class="col-xs-3 control-label">工作地点</label>
+                                            <div class="col-xs-8 article_place">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="sName" class="col-xs-3 control-label">工作描述</label>
+                                            <div class="col-xs-8 article_desc">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="sName" class="col-xs-3 control-label">帖子类型</label>
+                                            <div class="col-xs-8 article_tp">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="sName" class="col-xs-3 control-label">工作类型：</label>
+                                            <div class="col-xs-8 article_worktp">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="sName" class="col-xs-3 control-label">工资范围</label>
+                                            <div class="col-xs-8 article_wages">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="sName" class="col-xs-3 control-label">发布时间</label>
+                                            <div class="col-xs-8 article_date">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+            </div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function () {
+             var $body = $('body');
+             var path_info = window.location.pathname + window.location.search;
+             $("#url_info").val(path_info);
+
+            $body.on('change', 'select:has(option[href])', function(e) {
+                var _this = $(this),
+                    _href = _this.find('option:selected').attr('href');//获取要跳转的地址
+                location.href = _href; //跳转
+            });
+
+            $("#shenhe_ajax").click(function () {
+                $.ajax({
+                    url: '/admin/shenhe_ajax/',
+                    data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'aid':$(this).attr("aid")},
+                    type: 'POST',
+                    traditional: true,
+                    dataType:'JSON',
+                    success: function(obj){
+                        if (obj["status"] == 302){
+                            window.open("/admin/login/", target="_self");
+                        }else {
+                            $(".article_title").text(obj['title']);
+                            $(".article_place").text(obj['place']);
+                            $(".article_desc").text(obj['desc']);
+                            $(".article_date").text(obj['date']);
+                            $(".article_wages").text(obj['wages']);
+                            $(".article_worktp").text(obj['worktp']);
+                            if (obj['tp'] == 1) {
+                                $(".article_tp").text("招人");
+                            } else {
+                                $(".article_tp").text("求职");
+                            }
+                            ;
+                            $(".shenhe_sub_article").attr('aid', obj['id']);
+                        }
+                    },
+                })
+            });
+
+            $(".shenhe_sub").click(function () {
+                $.ajax({
+                    url: '/admin/weigui/',
+                    data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'rid':$(this).attr("rid"),'pd': $(this).attr("pd")},
+                    type: 'POST',
+                    traditional: true,
+                    dataType:'JSON',
+                    success: function(obj){
+                        if (obj["status"] == 302){
+                            window.open("/admin/login/", target="_self");
+                        }
+                        if (obj['data'] == "success"){window.location.reload();}
+                        else{alert(obj["data"]);}
+
+                    },
+                })
+            });
+        })
+    </script>
+{% endblock %}

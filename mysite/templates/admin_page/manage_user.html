@@ -1,0 +1,90 @@
+{% extends "admin_page/master.html" %}
+{% block css %}
+    <style>
+        #myform1 span {
+            font-size: 10px;
+            color: red;
+            font-family: "Baskerville Old Face";
+        }
+    </style>
+{% endblock %}
+{% block leftMeun %}
+
+    <div class="leftMeun" id="leftMeun">
+        <div id="logoDiv">
+            <p id="logoP"><img id="logo" alt="校园兼职网" src="/static/admin/images/logo.png"><span>校园兼职网</span></p>
+        </div>
+        <div id="personInfor">
+            <p id="userName">管理员</p>
+            <p><span>442203811@qq.com</span> More
+
+            </p>
+            <p>&nbsp;&nbsp;&nbsp;
+                    <a href="{% url 'myadmin:logout' %}">退出登录</a>
+                </p>
+        </div>
+        <div class="meun-title">账号管理</div>
+        <div class="meun-item  "><a href="/admin/all_user"><img src="/static/admin/images/icon_chara_grey.png">用户管理</a></div>
+        <div class="meun-item" ><a href="/admin/user_shenhe"><img src="/static/admin/images/icon_source.png">用户申请</a></div>
+
+        <div class="meun-title">文章管理</div>
+        <div class="meun-item"><a href="/admin/all_article"><img src="/static/admin/images/icon_house_grey.png">全部文章</a></div>
+        <div class="meun-item "><a href="/admin/article_shenhe"><img src="/static/admin/images/icon_change_grey.png">文章审核</a></div>
+        <div class="meun-item"><a href="/admin/tags"><img src="/static/admin/images/icon_card_grey.png">文章标签管理</a></div>
+        <div class="meun-item "><a href="/admin/weigui"><img src="/static/admin/images/icon_char_grey.png">违规管理</a></div>
+
+        <div class="meun-title">ADMIN</div>
+        <div class="meun-item"><a href="/admin/notice"><img src="/static/admin/images/icon_user.png">公告栏</a></div>
+        <div class="meun-item meun-item-active"><a href="/admin/manager"><img src="/static/admin/images/icon_rule_grey.png">修改密码</a></div>
+    </div>
+{% endblock %}
+
+{% block tab-content %}
+<div >
+    <div class="check-div row">
+        <div class="col-lg-6 row" style="margin:auto;" >
+            <form action="/admin/manage_money/" method="post">
+                {% csrf_token %}
+                <label>每次违规扣取信用值：</label>
+                <input type="text" class="form-control input-sm" name="input_value" placeholder="{{ money }}">
+                <button class="btn btn-white btn-xs ">修 改  </button>
+            </form>
+        </div>
+    </div>
+    <div id="myform1" style="padding: 50px 0;margin-top: 50px;background-color: #fff; text-align: right;width: 420px;margin: 50px auto;">
+        <form action="/admin/manager/" method="post">
+            {% csrf_token %}
+            <div class="form-group row">
+                <label for="sKnot" class="col-xs-4 control-label">{{ fm.old_pwd.label }}：</label>
+                <div class="col-xs-5">
+                    {{ fm.old_pwd }}<span>{{ form.old_pwd.errors.0 }}{{ old_error }}</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="sKnot" class="col-xs-4 control-label">{{ fm.new_pwd1.label }}：</label>
+                <div class="col-xs-8">
+                    {{ fm.new_pwd1 }}<span>{{ form.new_pwd1.errors.0 }}</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="sKnot" class="col-xs-4 control-label">{{ fm.new_pwd2.label }}：</label>
+                <div class="col-xs-5">
+                    {{ fm.new_pwd2 }}<span>{{ form.new_pwd2.errors.0 }}{{ new_error }}</span>
+                </div>
+            </div>
+            <div class="form-group text-right">
+                <div class="col-xs-offset-4 col-xs-5" style="margin-left: 169px;">
+                    <button type="reset" class="btn btn-xs btn-white">取 消</button>
+                    <button type="submit" class="btn btn-xs btn-green">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

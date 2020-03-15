@@ -1,0 +1,43 @@
+from django.contrib import admin
+from django.conf.urls import include
+from myadmin import views
+from django.urls import path
+
+urlpatterns = [
+    path('ajax_user/', views.ajax_user),
+    path('ajax_article/', views.ajax_article),
+    path('all_user/', views.all_user, name="all_user"),
+    path('add_user/', views.add_user),
+    path('del_user/', views.del_user),
+    path('user_input/', views.user_input),
+    path('show_xinyong/', views.show_xinyong),
+    path('add_xinyong/', views.add_xinyong),
+    path('user_shenhe/', views.user_shenhe),
+    path('shenhe_input/', views.shenhe_input),
+    path('all_article/', views.all_article),
+    path('article_input/', views.article_input),
+    path('update_article/', views.update_article),
+    path('del_article/', views.del_article),
+    path('article_shenhe/', views.article_shenhe),
+    path('find_shenhe/', views.find_shenhe),
+    path('add_wages/', views.add_wages),
+    path('add_worktp/', views.add_worktp),
+    path('shenhe_ajax/', views.shenhe_ajax),
+    path('tags/', views.tags),
+    path('update_wages/', views.update_wages),
+    path('update_wages1/', views.update_wages1),
+    path('update_worktp/', views.update_worktp),
+    path('update_worktp1/', views.update_worktp1),
+    path('del_wages/', views.del_wages),
+    path('del_worktp/', views.del_worktp),
+    path('weigui/', views.weigui),
+    path('find_report/', views.find_report),
+    path('manager/', views.manager),
+    path('manage_money/', views.manage_money),
+    path('add_notice/', views.add_notice),
+    path('login/', views.login, name="admin_login"),
+    path('logout/', views.logout, name="logout"),
+    path('notice/', views.notice, name="notice"),
+    path('ajax_notice/', views.ajax_notice, name="ajax_notice"),
+    path("del_notice/",views.del_notice, name="del_notice"),
+]

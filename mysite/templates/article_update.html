@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+
+{% block leader %}
+
+    <ul>
+        <li class="on"><a href="/index/">首页</a></li>
+        <li ><a href="/zjz/">信息中心</a></li>
+        <li ><a href="/wyfb/">我要发布</a></li>
+        <li><a href="/lxwm/">联系我们</a></li>
+    </ul>
+
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="/static/lib/css/zjz.css" >
+    <style>
+        .cgss{
+            width: 920px;
+            margin: 0 auto;
+            padding: 0 70px;
+        }
+        .m-title{
+            font-size: 24px;
+            color: #4e94ff;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .f-12{
+            font-size: 12px;
+            color: #484848;
+        }
+        .tip-content{
+            margin: 0 auto;
+            margin-top: 15px;
+            border:1px solid rgba(255,148,0,.3);
+            background-color: rgba(255,148,0,.1);
+            border-radius: 4px;
+            width: 700px;
+            text-align: center;
+            font-family: Inconsolata;
+            font-style: normal;
+            font-weight: 400;
+            font-variant: normal;
+            text-transform: none;
+            text-rendering: auto;
+            line-height: 1;
+            font-size: 13px;
+            padding-bottom: 8px;
+            padding-top: 8px;
+            color: #606060;
+        }
+        .form-content1{
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .form-content{
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+    .w680{
+        width: 680px;
+        margin: 0 auto;
+    }
+    .title-num{
+        display: block;
+        width: 20px;
+        height: 20px;
+        background-color: #4e94ff;
+        border-radius: 50%;
+        color: white;
+        text-align: center;
+        margin-right: 10px;
+    }
+    .title-num-none{
+        display: block;
+        width: 20px;
+        height: 20px;
+        color: white;
+        margin-right: 10px;
+    }
+    .float-right{
+        float: right;
+    }
+    .float-left{
+        float: left;
+    }
+    .tip-span{
+        color: red;
+        display: block;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        float: left;
+    }
+    .chakan {
+        display: block;
+        width: 100px;
+        text-align: center;
+        float: right;
+        color: #4e94ff;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .form-content input {
+        height: 36px;
+        line-height: 36px;
+        border-radius: 4px;
+        color: #666;
+        border: 1px silver solid;
+        padding: 0 7px;
+    }
+    .form-content select {
+        width: 100%;
+        height: 36px;
+        line-height: 36px;
+        border-radius: 4px;
+        color: #666;
+        border: 1px silver solid;
+        padding: 0 7px;
+        text-align: center;
+    }
+    .form-content textarea{
+        width: 100%;
+        height: 98px;
+        line-height: 36px;
+        border-radius: 4px;
+        color: #666;
+        border: 1px silver solid;
+        padding: 0 7px;
+    }
+    .form-button{
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+    .btn-info{
+        width: 200px;
+        border-radius: 36px;
+        background-color: #74a0ff;
+        border-color: #74a0ff;
+    }
+    .btn-info:hover{
+        width: 200px;
+        border-radius: 36px;
+        background-color: #74a0ff;
+        border-color: #74a0ff;
+    }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="cgss pozi" style="color: #707070; font-size: 12px;line-height: 30px;margin-top: 10px;">当前位置：<a href="/index/">首页</a> > <a href="/wdfb/">我的发布</a> > {{ article.title }}</div>
+    <div class="cgss container" style="margin-top: 14px;">
+        <div class="row">
+            <div class="tips col-lg-12">
+                <div class="tip-content">
+                    请勿发布以下内容：证券充场、献血卖精、淘宝刷单、充卡充值、打字员、文字录入、娱乐场所服务员、会员制兼职等。
+                </div>
+            </div>
+        </div>
+        <form action="{% url 'article_update' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="sid" value="{{ article.id }}">
+        <div class="row form-content1">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num float-left">1</div><div class="w680 float-left">基本信息</div></div></div>
+        </div>
+
+        <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left"><span class="tip-span">*</span>标题</div></div></div>
+        </div>
+
+        <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left"><input type="text" style="width: 100%;" required name="title" value="{{ article.title }}"></div></div></div>
+        </div>
+        <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left"><span class="tip-span">*</span>分类</div></div></div>
+        </div>
+
+        <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left"><select name="usertp" id="usertp"><option value="1" {% if article.usertype == 1 %} selected {% endif %}>招人</option><option value="2" {% if article.usertype == 2 %} selected {% endif %}>求职</option></select></div></div></div>
+        </div>
+
+        <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left"><span class="tip-span">*</span>薪酬待遇</div></div></div>
+        </div>
+
+        <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left">
+                {{ select_wages }}
+            </div></div></div>
+        </div>
+
+            <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left"><span class="tip-span">*</span>工作类型</div></div></div>
+        </div>
+
+        <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left">
+                {{ select_worktp }}
+            </div></div></div>
+        </div>
+
+        <div class="row form-content1">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num float-left">2</div><div class="w680 float-left">详细说明</div></div></div>
+        </div>
+        <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left"><span class="tip-span">*</span>工作详情<span class="chakan" data-toggle="modal" data-target="#shili">查看示例</span></div></div></div>
+        </div>
+
+        <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left"><textarea name="desc" required id="desc" placeholder="{{ article.desc }}"></textarea></div></div></div>
+        </div>
+        <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left"><span class="tip-span">*</span>手机号码</div></div></div>
+        </div>
+
+        <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left"><input type="text" name="tel" style="width: 100%;" required value="{{ article.s_tel }}"></div></div></div>
+        </div>
+            <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left"><span class="tip-span">*</span>工作地点</div></div></div>
+        </div>
+
+        <div class="row form-content">
+            <div class="col-lg-12"><div style="width: 710px;margin: 5px auto;"><div class="title-num-none float-left"></div><div class="w680 float-left"><input type="text" name="place" style="width: 100%;" required value="{{article.place}}"></div></div></div>
+        </div>
+
+        <div class="row form-content1 form-button">
+            <div class="col-lg-12"><button class="btn  btn-info">修改</button></div>
+        </div>
+        </form>
+    </div>
+
+    <div class="modal fade" id="shili" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width: 520px;">
+                    <div class="modal-header" style="    border-bottom: 0px solid #e5e5e5;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="modal-title" id="gridSystemModalLabel" style="    line-height: 20px;font-size: 14px;color: #17233d;font-weight: 700;">示例</div>
+                    </div>
+                        <div class="modal-body" style="font-family: Consolas,Menlo,Courier,monospace;font-size: 1em;">
+                                                    <p style="padding-left: 20px;padding-right: 20px;">招聘岗位：陈奕迅演唱会志愿者</p>
+                              <p style="padding-left: 20px;padding-right: 20px;">工作内容：1.协助主办方调度后台使用物料</p>
+                            <p style="padding-left: 20px;padding-right: 20px;">&nbsp;&nbsp;&nbsp;&nbsp;2.协助布置整理后台所有演职休息室</p>
+
+                              <p style="padding-left: 20px;padding-right: 20px;">工作要求：18周岁以上，活泼外向，做事积极主动，责任心强，应变能力强</p>
+
+                              <p style="padding-left: 20px;padding-right: 20px;">福利待遇：100元/天，提供餐饮，日结</p>
+                        </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+
+{% endblock %}
+

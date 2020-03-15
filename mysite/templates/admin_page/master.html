@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+{#        <meta name="description" content="校园招聘网，属于大人员的兼职工具">#}
+{#        <meta name="keywords" content="校园招聘网 兼职 工作 ">#}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="format-detection" content="telephone=no">
+        <title>Bootstrap左右结构响应式后台管理模板</title>
+        <script src="/static/admin/js/jquery.min.js"></script>
+        <script src="/static/admin/js/bootstrap.min.js"></script>
+
+        <link href="/static/admin/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/static/admin/css/common.css" />
+        <link rel="stylesheet" type="text/css" href="/static/admin/css/slide.css" />
+        <link rel="stylesheet" type="text/css" href="/static/admin/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/static/admin/css/flat-ui.min.css" />
+        <link rel="stylesheet" type="text/css" href="/static/admin/css/jquery.nouislider.css">
+        {% block css %}
+        {% endblock %}
+    </head>
+
+    <body>
+        <div id="wrap">
+            <!-- 左侧菜单栏目块 -->
+            {% block leftMeun %}
+
+            {% endblock %}
+            <!-- 右侧具体内容栏目 -->
+            <div id="rightContent">
+                <a class="toggle-btn" id="nimei">
+                    <i class="glyphicon glyphicon-align-justify"></i>
+                </a>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    {% block tab-content %}
+
+                    {% endblock %}
+                    <!-- 资源管理模块 -->
+
+                                <!--系统管理折叠狂-->
+
+
+                                    <!--用户管理折叠狂-->
+
+                                    <!--地区管理折叠狂-->
+
+                        <!--页码块-->
+
+                        <!--弹出窗口 添加资源-->
+
+                        <!-- /.modal -->
+
+                        <!--修改资源弹出窗口-->
+
+                        <!-- /.modal -->
+                        <!--弹出删除资源警告窗口-->
+
+                        <!-- /.modal -->
+                    </div>
+                    <!-- 权限管理模块 -->
+
+            <!--用户管理模块-->
+
+            <!-- 修改密码模块 -->
+
+            <!--地区管理模块-->
+
+            <!--规则管理模块-->
+
+            <!--时间段管理模块-->
+
+            <!--座位管理模块-->
+
+            <!--座位详情模块-->
+
+            <!--人员管理模块-->
+
+        </div>
+
+        </div>
+
+    </body>
+    {% block script %}
+    {% endblock %}
+</html>

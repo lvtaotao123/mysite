@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <title>校园招聘网</title>
+    <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="format-detection" content="telephone=no">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="alternate icon" type="image/png" href="/static/pic/favicon.png">
+<link rel='icon' href='/static/pic/favicon.ico' type='image/x-ico' />
+<meta name="description" content="专注校园招聘，为学生兼职提供平台" />
+<meta name="keywords" content="招聘 校园兼职 兼职" />
+<link rel="stylesheet" href="/static/lib/css/default.min.css?t=227" />
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script type="text/javascript" src="/static/lib/jquery/jquery.min.js"></script>
+<!--<![endif]-->
+<!--[if lte IE 8 ]>
+
+<![endif]-->
+<script type="text/javascript" src="/static/lib/handlebars/handlebars.min.js"></script>
+<script type="text/javascript" src="/static/lib/iscroll/iscroll-probe.js"></script>
+<script type="text/javascript" src="/static/lib/amazeui/amazeui.min.js"></script>
+<script type="text/javascript" src="/static/lib/raty/jquery.raty.js"></script>
+<script type="text/javascript" src="/static/lib/js/main.min.js?t=1"></script>
+</head>
+<style type="text/css">
+    .hd-search-right a{
+        color: #999;
+        margin-right: 1.2rem;
+        line-height: 44px;
+        cursor:pointer;
+    }
+
+    .login ul{
+        border: 1px solid #F0F0F0;
+        border-bottom: none;
+        border-radius: 5px;
+        z-index: 999;
+        background-color: white;
+        right:246px;
+    }
+    .login ul li{
+        display: list-item;
+        border-bottom: 1px solid #F0F0F0;
+        line-height: 30px;
+        text-align: center;
+        width: 140px;
+        height: 40px;
+    }
+    .tip_logo{
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        border: 1px white solid;
+        display: inline-block;
+        margin-left: 4px;
+        background-color: #99CCFF;
+        color: white;
+        text-align: center;
+        line-height: 15px;
+        font-size: 8px;
+    }
+
+    .hd-search-left ol, ul, li {
+        list-style: none;
+    }
+    .hd-search-left  ul {
+        text-align: center;
+        height: 43px;
+    }
+
+    .hd-search-left  li {
+        padding-right: 6rem;
+        display: inline-block;
+        line-height: 44px;
+        font-size: 1.8rem;
+    }
+
+    .hd-search-left  a{
+        color: black;
+    }
+    .hd-search-left  a:hover, a:focus{
+        color: #0076ca;
+        text-decoration: none;
+    }
+    .on a{
+        color: #0076ca;
+    }
+    .hd-search {
+        padding-top: 2rem;
+    }
+
+</style>
+<script src="/static/lib/jquery-3.4.1.js"></script>
+<script src="/static/lib/bootstrap.min.js"></script>
+<link href="/static/lib/css/bootstrap.min.css" rel="stylesheet">
+{% block css %}
+{% endblock %}
+<body>
+    <header class="hd">
+        <div class="cg">
+            <div class="hd-search">
+
+                <div class="hd-search-left">
+                    <img class="am-hide-md-down" src="/static/pic/699aed80fbe5d521631fbadf66dc1ccc_127.png" />
+                </div>
+
+                <div class="hd-search-left am-hide-md-down" style="margin-left: 160px;">
+{#                    <div class="hd-search-right-input">#}
+{#                        <input type="text" name="name" value="" placeholder="查找任务"  style="color: #337ab7;border: 1px solid; border-radius:4px;">#}
+{#                        <button class="font am-show-md-down">&#xe634;</button>#}
+{#                    </div>#}
+
+                    {% block leader %}
+                    {% endblock %}
+
+                </div>
+                <div style="float: right;width: 50px;text-align: left;height: 44px;line-height: 44px;margin-right: 70px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                    {% if request.u %}{{ request.u.username }}{% endif %}
+                </div>
+                <div class="hd-search-right login"  style="height: 44px;margin-right: 0px;">
+                    {% if request.u %}
+                        <a id="logo_position">
+                            <img src="{{ request.u.imagepath }}"  style="border-radius: 50%;width:40px;height:40px;cursor: pointer;" >
+                        </a>
+                        <ul class="logo_ul" style="position: absolute;display: none;top: 62px;right: 283px;">
+                            {% if request.u.is_heshi == 0 %}<li><a href="{% url 'sfhs' %} ">身份认证</a></li>{% endif %}
+                            <li><a href="{% url 'grzl' %}">个人资料</a></li>
+                            <li><a href="{% url 'wdfb' %}">我发布的
+                            ({{ request.u.subject_set.count }})</a>
+                            </li>
+                            <li><a href="/xxzx/?tp=1">系统通知
+                                ({{ request.u.notice_set.count }})
+                            </a></li>
+                            <li><a href="/xxzx/?tp=2">回复我的
+                            </a></li>
+                            <li><a href="/user_reset/">修改密码
+                            </a></li>
+                            <li><a href="{% url 'user_logout' %}">退出登录</a></li>
+                        </ul>
+                    {% else %}
+                        <a href="/user_register/">注册</a>
+                        <a href="/user_login/">登录</a>
+                    {% endif %}
+                </div>
+
+
+            </div>
+        </div>
+
+
+
+    </header>
+    {% block notice %}
+    {% endblock %}
+
+     {% block guanggao1 %}
+    {% endblock %}
+
+    {% block zhaopin %}
+    {% endblock %}
+
+
+     {% block guanggao2 %}
+    {% endblock %}
+
+
+    {% block qiuzhi %}
+    {% endblock %}
+
+    {% block content %}
+
+    {% endblock %}
+    <footer class="footer" >
+        <div class="cg" >
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-6">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-8">
+                     <div class="footer-div1 am-hide-md-down">
+                         <h1>关于我们</h1>
+                         <div class="footer-div1-top">
+                             <img src="/static/pic/logo.png"/>
+                             <span><em>校园招聘网成立于2020</em></span>
+                         </div>
+                         <div class="footer-div1-bottom">
+                             校园招聘网成立于2020年，总 部位于毛泽东故居——湘潭市。致力于打造一个利于学生的兼职平台
+                         </div>
+                     </div>
+                </div>
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+                     <div class="footer-div2 am-hide-md-down" >
+                         <h1>职位招聘</h1>
+                         <ul>
+                            <li><a>网页管理人员</a></li>
+                            <li><a>客服</a></li>
+                            <li><a>营销人员</a></li>
+                            <li><a>经理</a></li>
+                         </ul>
+                     </div>
+                </div>
+            </div>
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-6">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-8">
+                    <div class="footer-div3 am-hide-md-down">
+                        <h1>联系我们</h1>
+                        <ul>
+                            <li><i>&#xe617;</i>地址 Add : 湘潭市湖南工程学院计算机与通信学院e608</li>
+                            <li><i>&#xe601;</i>电话Tel：(86) 17352623323</li>
+                            <li><i>&#xe691;</i>442203811@qq.com</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+                    <div class="footer-div3 am-hide-md-down">
+                        <h1>关注我们</h1>
+                        <ul>
+                            <li><em>&#xe644;</em><b>新浪微博</b></li>
+                            <li><em>&#xe6c9;</em><b>优酷</b></li>
+                            <li><em>&#xe66f;</em><b>微信</b></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="footer-bottom am-hide-md-down">
+                    <div class="footer-bottom-link" style="text-align: center;">
+
+
+                            <strong style="color: #999;">
+                                友情链接：
+                                <a href="https://www.hnie.edu.cn/">湖南工程学院</a>
+                                <a href="http://jwc.hnie.edu.cn/">湖南工程学院教务处</a>
+                            </strong>
+
+                     </div>
+                </div>
+                <h2>申请友情链接请联系QQ：442203811</h2>
+                <h3>@2020-2021 版权所有 Lvtaotao.<span> POWER BY </span>DJANGO AND BOOTSTRAP  </h3>
+            </div>
+        </div>
+    </footer>
+
+    </body>
+<script>
+    $(function(){
+        $("#logo_position, .logo_ul").mouseover(function(){
+            $("#logo_position img").css("border","#00FF66 1px solid");
+            $(".logo_ul").css("display","");
+        });
+        $("#logo_position, .logo_ul").mouseout(function(){
+          $(".logo_ul").css("display","none");
+          $("#logo_position img").css("border","");
+        });
+    })
+</script>
+{% block js %}
+{% endblock %}
+</html>

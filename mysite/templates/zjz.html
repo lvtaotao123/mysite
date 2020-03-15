@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block leader %}
+    <ul>
+        <li ><a href="/index/">首页</a></li>
+        <li class="on"><a href="/zjz/">信息中心</a></li>
+        <li><a href="/wyfb/">我要发布</a></li>
+        <li><a href="/lxwm/">联系我们</a></li>
+    </ul>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/lib/css/zjz.css" >
+{% endblock %}
+
+{% block content %}
+
+        <div class="cg pozi" style="color: #707070; font-size: 12px;line-height: 30px;margin-top: 10px;">当前位置：<a href="/index/">首页</a> > 找兼职</div>
+        <div class="cg" style="background-color: #f5f5f5;padding: 10px;color: #717592;font-size: 15px;font-family: Lato,Helvetica,Arial,sans-serif;height: 40px;">
+            <div class="col-lg-3 col-xs-7 col-md-6 select" style="float: left;">
+                <label for="paixu" style="font-weight: 400;font-family: Lato,Helvetica,Arial,sans-serif;">工资范围:&nbsp;</label>
+                {{ wages_select }}
+            </div>
+            <div class="col-lg-3 col-xs-7 col-md-6 select" style="float: left;">
+                <label for="paixu" style="font-weight: 400;font-family: Lato,Helvetica,Arial,sans-serif;">工作类型:&nbsp;</label>
+                {{ worktp_select }}
+            </div>
+            <div class="col-lg-3 col-xs-7 col-md-6 select" style="float: left;">
+                <label for="paixu" style="font-weight: 400;font-family: Lato,Helvetica,Arial,sans-serif;">选择分类:&nbsp;</label>
+                {{ usertype_select }}
+            </div>
+        </div>
+    {% for article in articles %}
+        <div class="cg" style="border:1px solid #f5f5f5;height: 120px;padding: 16px;margin-top: 10px;">
+        <div class="txt" style="float: left;">
+            <div class="txt-title">
+                <a href="/jz?id={{ article.id }}">{{ article.title|truncatewords:"10" }}</a>
+            </div>
+            <ul class="txt-field" style="margin-top: 8px;width: 420px;display: block;">
+                <li>
+                    <span>工作类型：{{ article.worktype.name }}
+                </span></li>
+                <li><span>发布人：</span>{{ article.user.username }}
+                    {% if article.user.id == 21 %}
+                        <img src="/static/pic/guan.png" style="height: 20px;width: 20px;border: 1px solid #fd8000;border-radius: 50%">
+                    {% endif %}
+                </li>
+                <li><span>发布时间：</span>{{ article.date|date:"Y/m/d" }}</li>
+                <li><span>工作地点：</span>{{ article.place|truncatewords:"8" }}</li>
+            </ul>
+        </div>
+        <div class="item-bottom">
+            {% if article.usertojob_set.all.count == 0 %}<a class="shenqing_button" data-toggle="modal" sid="{{ article.id }}" pd="0" data-target="#addtel">我要联系</a>{% endif %}
+            {% for i in article.usertojob_set.all %} {% if i.uid == request.u %}<a class="shenqing_button"  sid="{{ article.id }}" pd="1" >已申请</a>{% else %}<a class="btn12 shenqing_button" pd="0" data-toggle="modal" data-target="#addtel">我要联系</a>{% endif %}  {% endfor %}
+        </div>
+        <div class="salary">
+            <span class="money"><em>{{ article.wages.name }}</em></span>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="cg" style="margin-top: 43px;margin-bottom: 62px;">
+        <div class="pageBox" data-widget="app/ms_v2/common/list_page.js#pagination">
+            {{ pagestr }}
+        </div>
+    </div>
+    <div class="modal fade" id="addtel" role="dialog" aria-labelledby="gridSystemModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">您的电话：（对方通过该电话联系您）</h4>
+                    </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                    <input type="hidden" name="aid" class="aaid">
+                                    <div class="form-group ">
+                                        <label for="sName" class="col-xs-3 control-label">tel：</label>
+                                        <div class="col-xs-8 c_title">
+                                            <input type="text" id="tel_sub" placeholder="">
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                            <button type="button" class="btn btn-primary  btn-xs queding">保 存</button>
+                        </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(function(){
+            var $select = $(".formccc");
+            $select.on('change', function (e) {
+                var u = window.location.pathname;
+                var wid = $('#select_wages').find('option:selected').val();
+                var cid = $('#select_worktp').find('option:selected').val();
+                var usertp = $("#select_usertype").find('option:selected').val();
+                var  _href =  u+'?wages='+wid+'&worktp='+cid+'&usertp='+usertp;//获取要跳转的地址
+                location.href = _href;
+            });
+            $('.pageBox .pageLink a').click(function () {
+                var wid = $('#select_wages').find('option:selected').val();
+                var cid = $('#select_worktp').find('option:selected').val();
+                var usertp = $("#select_usertype").find('option:selected').val();
+                $(this).attr("href", $(this).attr("href")+'&wages='+wid+'&worktp='+cid+'&usertp='+usertp);
+            });
+
+            $(".shenqing_button").click(function () {
+                var pd = $(this).attr("pd");
+                var s_id = $(this).attr("sid");
+                if(pd == "1"){
+                    $.getJSON('/shenqing_jz/', {'pd':pd,'s_id':s_id}, function (json) {
+                        if(json["status"] === 404){alert("您的账户暂未认证！");}
+                        else if(json["status"] === 302){window.open("/user_login/","_self");}
+                        else if(json["status"] === 200){location.reload();}
+                    })}
+                else{
+                    $("#tel_sub").attr({"pd":pd, "s_id":s_id});
+                }
+
+            });
+
+            $(".queding").click(function () {
+                var pd = $("#tel_sub").attr("pd");
+                var s_id = $("#tel_sub").attr("s_id");
+                var tel = $("#tel_sub").val();
+                $.getJSON('/shenqing_jz/', {'pd':pd,'s_id':s_id, 'tel':tel}, function (json) {
+                        if(json["status"] === 404){alert("您的账户暂未认证！");}
+                        else if(json["status"] === 302){window.open("/user_login/","_self");}
+                        else if(json["status"] === 201){alert("手机格式错误！");}
+                        else if(json["status"] === 200){location.reload();}
+                });
+            });
+
+        })
+    </script>
+{% endblock %}
